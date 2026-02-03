@@ -1,9 +1,11 @@
 import { type ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import mvpsFromJson from '@/assets/mvps.json'
 import { DateTime } from 'luxon'
+import { debounceTime, Subject } from 'rxjs'
 // app
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 import { TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
+import { computeMvpDifferenceTimers, getInitialTrackingStateFromLocalStorage } from '@/helpers/TrackingContainer'
 // self
 import {
     MvpNameMapSpawn,
@@ -19,7 +21,7 @@ import {
     UpdateContainer,
 } from './styles'
 import type { RagnarokMvp } from './types'
-import { debounceTime, Subject } from 'rxjs'
+import { localStorageMvpsKey } from '@/constants.ts'
 
 const reducer = (
     currentState: RagnarokMvp[],
@@ -28,17 +30,48 @@ const reducer = (
         updateTime: DateTime
     }
 ) => {
-    return [
+    const modifiedMvps = [
         { ...beingModified.mvp, timeOfDeath: beingModified.updateTime },
         ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
     ]
+
+    const sortedMvps = modifiedMvps.sort((a, b) => {
+        const aHasTime = Boolean(a.timeOfDeath)
+        const bHasTime = Boolean(b.timeOfDeath)
+
+        // 1) timeOfDeath first
+        if (aHasTime !== bHasTime) return aHasTime ? -1 : 1
+
+        // 2) if both have timeOfDeath, closest "difference" to 0 first
+        if (aHasTime && bHasTime) {
+            const { minimumDifferenceInMinutes: aDiff } = computeMvpDifferenceTimers(a)
+            const { minimumDifferenceInMinutes: bDiff } = computeMvpDifferenceTimers(b)
+
+            const aScore = Math.abs(Number(aDiff))
+            const bScore = Math.abs(Number(bDiff))
+
+            if (aScore !== bScore) return aScore - bScore
+        }
+
+        // 3) fallback: alphabetical
+        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    })
+
+    localStorage.setItem(localStorageMvpsKey, JSON.stringify(sortedMvps))
+    return sortedMvps
 }
 
 const TrackingContainer = (): ReactElement => {
     const searchSubject = useRef(new Subject<string>()).current
 
     const [searchMvp, setSearchMvp] = useState('')
-    const [ragnarokMvps, dispatcher] = useReducer(reducer, mvpsFromJson as RagnarokMvp[])
+
+    const initialStateFromLocalStorage = getInitialTrackingStateFromLocalStorage()
+
+    const [ragnarokMvps, dispatcher] = useReducer(
+        reducer,
+        initialStateFromLocalStorage ?? (mvpsFromJson as RagnarokMvp[])
+    )
 
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
         const updateTime = DateTime.now().toUTC()
