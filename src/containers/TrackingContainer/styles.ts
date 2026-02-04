@@ -44,17 +44,6 @@ export const TrackingHeader = styled.thead``
 
 export const TrackingBody = styled.tbody``
 
-export const MvpNameMapSpawn = styled.div`
-    display: flex;
-    flex-direction: column;
-    font-size: 12px;
-
-    & > div:first-child {
-        font-size: 14px;
-        font-weight: bold;
-    }
-`
-
 export const UpdateContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -80,4 +69,27 @@ export const ResetButton = styled.button`
     background-color: transparent;
     border: none;
     cursor: pointer;
+`
+
+export const MvpSprite = styled.img`
+    width: 32px;
+    mix-blend-mode: multiply;
+`
+
+export const Header = styled.header`
+    padding: 1rem;
+    width: 740px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: white;
+    background-color: var(--color-primary);
+`
+
+export const HeaderDisplayDates = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 `

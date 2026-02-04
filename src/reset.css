@@ -10,6 +10,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  outline-color: #0077b6;
 }
 
 /* Prevent font size inflation */

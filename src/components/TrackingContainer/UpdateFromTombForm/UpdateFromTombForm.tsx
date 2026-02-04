@@ -1,6 +1,5 @@
 import { memo, type ReactElement } from 'react'
 import { useForm } from 'react-hook-form'
-import { DateTime } from 'luxon'
 // app
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 // self
@@ -25,13 +24,12 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
         updateFromTomb(data)
     }
 
-    const maxTime = DateTime.now().setZone('Europe/London').toFormat('HH:mm')
     const inputIsEmptyOrErrored = !dirtyFields['tombTime'] || errors['tombTime'] !== undefined
 
     return (
         <FormContainer onSubmit={handleSubmit(preUpdateHandler)}>
             <InputTombTime
-                {...register('tombTime', { required: true, max: maxTime })}
+                {...register('tombTime', { required: true })}
                 $hasError={Boolean(errors['tombTime'])}
                 type="time"
             />

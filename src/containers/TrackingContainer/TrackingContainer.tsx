@@ -1,13 +1,16 @@
 import { type ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react'
-import mvpsFromJson from '@/assets/mvps.json'
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
 // app
+import mvpsFromJson from '@/assets/mvps.json'
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeMvpDifferenceTimers, getInitialTrackingStateFromLocalStorage } from '@/helpers/TrackingContainer'
 // self
 import {
+    Header,
+    HeaderDisplayDates,
+    MvpSprite,
     ResetButton,
     SearchContainer,
     TimeOfDeathContainer,
@@ -22,7 +25,7 @@ import {
     UpdateContainer,
 } from './styles'
 import type { RagnarokMvp } from './types'
-import { localStorageMvpsKey } from '@/constants.ts'
+import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
 
 const reducer = (
     currentState: RagnarokMvp[],
@@ -83,7 +86,7 @@ const TrackingContainer = (): ReactElement => {
     }, [searchInputRef])
 
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
-        const updateTime = DateTime.now().setZone('Europe/London')
+        const updateTime = DateTime.now().setZone(defaultTimeZoneName)
         dispatcher({ mvp, updateTime: updateTime })
         cleanSearchInput()
     }
@@ -92,7 +95,14 @@ const TrackingContainer = (): ReactElement => {
         (mvp: RagnarokMvp) => (data: { tombTime: string }) => {
             const [hour, minute] = data.tombTime.split(':').map(Number)
 
-            const tombTime = DateTime.now().set({ hour, minute, second: 0, millisecond: 0 })
+            console.log('hour, minute', hour, minute)
+
+            const tombTime = DateTime.now()
+                .setZone(defaultTimeZoneName)
+                .set({ hour, minute, second: 0, millisecond: 0 })
+
+            console.log('tombTime', tombTime, tombTime.toLocaleString(DateTime.DATETIME_MED))
+
             dispatcher({ mvp, updateTime: tombTime })
             cleanSearchInput()
         },
@@ -122,35 +132,54 @@ const TrackingContainer = (): ReactElement => {
             mvp.map.toLowerCase().includes(searchMvp.toLowerCase())
     )
 
+    const serverTime = DateTime.now().setZone(defaultTimeZoneName)
+    const localTime = DateTime.now()
+
+    const differenceServerAndLocal = serverTime.diff(localTime, 'hours').hours
+
     return (
         <TrackingContainerStyled>
+            <Header>
+                <SearchContainer>
+                    <label htmlFor="searchMvp">Search for name or map</label>
+                    <InputTombTime
+                        id="searchMvp"
+                        onChange={(changeEvent) => searchSubject.next(changeEvent.target.value)}
+                        placeholder="Dark Lord / pay"
+                        ref={searchInputRef}
+                        style={{ width: '340px' }}
+                        type="text"
+                    />
+                </SearchContainer>
+                <HeaderDisplayDates>
+                    <div>Server time: {serverTime.toFormat('HH:mm')}</div>
+                    <div>
+                        Your time: {localTime.toFormat('HH:mm')}{' '}
+                        {Boolean(differenceServerAndLocal) && <span>+{differenceServerAndLocal.toFixed()}</span>}
+                    </div>
+                </HeaderDisplayDates>
+            </Header>
+
             <TrackingTableResponsive>
                 <TrackingTable>
                     <TrackingHeader>
                         <TrackingRow>
-                            <TrackingHeaderCell>
-                                <SearchContainer>
-                                    <label htmlFor="searchMvp">Search for name or map</label>
-                                    <InputTombTime
-                                        id="searchMvp"
-                                        onChange={(changeEvent) => searchSubject.next(changeEvent.target.value)}
-                                        placeholder="Dark Lord"
-                                        ref={searchInputRef}
-                                        style={{ width: '180px' }}
-                                        type="text"
-                                    />
-                                </SearchContainer>
-                            </TrackingHeaderCell>
+                            <TrackingHeaderCell colSpan={2}>🐉 Mvp</TrackingHeaderCell>
                             <TrackingHeaderCell>⏳ Timers</TrackingHeaderCell>
-                            <TrackingHeaderCell>🔃 Update</TrackingHeaderCell>
+                            <TrackingHeaderCell>🔃 Auto or manually from tomb</TrackingHeaderCell>
                         </TrackingRow>
                     </TrackingHeader>
                     <TrackingBody>
                         {searchFilteredMvps.map((mvp) => {
-                            const { id, name, map, spawnTime, timeOfDeath } = mvp
+                            const { id, name, map, spawnTime, sprite, timeOfDeath } = mvp
+
+                            const spriteToUse = sprite ?? 'fallback.png'
 
                             return (
                                 <TrackingRow key={id}>
+                                    <TrackingCell style={{ width: 32, paddingRight: 0 }}>
+                                        <MvpSprite src={`./mvps/${spriteToUse}`} alt={`${name} sprite`} />
+                                    </TrackingCell>
                                     <TrackingCell>
                                         <MvpInformation map={map} name={name} spawnTime={spawnTime} />
                                     </TrackingCell>

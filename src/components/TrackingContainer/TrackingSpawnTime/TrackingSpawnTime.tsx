@@ -2,8 +2,10 @@ import { memo, type ReactElement, useEffect, useMemo, useState } from 'react'
 import { DateTime } from 'luxon'
 // app
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
-import { RelativeDateContainer, TimerContainer } from '@/components/TrackingContainer/TrackingSpawnTime/styles.ts'
 import { computeMvpDifferenceTimers } from '@/helpers/TrackingContainer'
+import { defaultTimeZoneName } from '@/constants'
+// self
+import { RelativeDateContainer, TimerContainer } from './styles.ts'
 
 interface TrackingSpawnTimeProps {
     mvp: RagnarokMvp
@@ -21,7 +23,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
 
     const { variationAboutToStart, variationAlreadyStarted, maximumDifferenceInMinutes, minimumDifferenceInMinutes } =
         useMemo<MemoReturn>(() => {
-            const dateUTC = DateTime.now().setZone('Europe/London')
+            const dateUTC = DateTime.now().setZone(defaultTimeZoneName)
 
             if (!mvp.timeOfDeath) {
                 return {
@@ -57,8 +59,8 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     const mvpDoesNotHaveVariation = mvp.spawnTime.minMinutes === mvp.spawnTime.maxMinutes
     const variationToStartOrAlreadyStarted = variationAboutToStart || variationAlreadyStarted
 
-    const minimumDate = DateTime.now().setZone('Europe/London').minus({ minutes: minimumDifferenceInMinutes })
-    const maximumDate = DateTime.now().setZone('Europe/London').minus({ minutes: maximumDifferenceInMinutes })
+    const minimumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: minimumDifferenceInMinutes })
+    const maximumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: maximumDifferenceInMinutes })
 
     const localMinimumDate = DateTime.now().minus({ minutes: minimumDifferenceInMinutes })
     const localMaximumDate = DateTime.now().minus({ minutes: maximumDifferenceInMinutes })
@@ -85,7 +87,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
                         title={`Server: ${maximumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMaximumDate.toLocaleString(DateTime.DATETIME_MED)}`}
                     >
                         {DateTime.now()
-                            .setZone('Europe/London')
+                            .setZone(defaultTimeZoneName)
                             .minus({ minutes: maximumDifferenceInMinutes })
                             .toRelative()}
                     </strong>

@@ -1,6 +1,7 @@
-import { localStorageMvpsKey } from '@/constants.ts'
 import { DateTime } from 'luxon'
-import type { RagnarokMvp } from '@/containers/TrackingContainer/types.ts'
+import mvpsFromJson from '@/assets/mvps.json'
+import { localStorageMvpsKey } from '@/constants.ts'
+import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
 
 type GetInitialTrackingStateFromLocalStorage = () => RagnarokMvp[] | null
 
@@ -9,7 +10,8 @@ export const getInitialTrackingStateFromLocalStorage: GetInitialTrackingStateFro
     try {
         const parsedState = JSON.parse(jsonState as string)
         return parsedState.map((mvp: any) => {
-            return { ...mvp, timeOfDeath: mvp.timeOfDeath ? DateTime.fromISO(mvp.timeOfDeath) : null }
+            const addSprite = mvpsFromJson.find((mvps) => mvps.id === mvp.id)?.sprite
+            return { ...mvp, addSprite, timeOfDeath: mvp.timeOfDeath ? DateTime.fromISO(mvp.timeOfDeath) : null }
         })
     } catch (error) {
         return null

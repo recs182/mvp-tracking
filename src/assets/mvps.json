@@ -81,6 +81,7 @@
         "name": "Atroce",
         "map": "ra_fild04",
         "spawnTime": { "minMinutes": 300, "maxMinutes": 310 },
+        "sprite": "1785.png",
         "timeOfDeath": null
     },
     {
@@ -88,6 +89,7 @@
         "name": "Atroce",
         "map": "ra_fild03",
         "spawnTime": { "minMinutes": 180, "maxMinutes": 190 },
+        "sprite": "1785.png",
         "timeOfDeath": null
     },
     {
@@ -95,6 +97,7 @@
         "name": "Atroce",
         "map": "ve_fild02",
         "spawnTime": { "minMinutes": 360, "maxMinutes": 370 },
+        "sprite": "1785.png",
         "timeOfDeath": null
     },
     {
@@ -102,6 +105,7 @@
         "name": "Atroce",
         "map": "ra_fild02",
         "spawnTime": { "minMinutes": 240, "maxMinutes": 250 },
+        "sprite": "1785.png",
         "timeOfDeath": null
     },
     {
@@ -109,11 +113,12 @@
         "name": "Atroce",
         "map": "ve_fild01",
         "spawnTime": { "minMinutes": 180, "maxMinutes": 190 },
+        "sprite": "1785.png",
         "timeOfDeath": null
     },
     {
         "id": 11,
-        "name": "Bacsojin",
+        "name": "Bacsojin / White Lady",
         "map": "lou_dun03",
         "spawnTime": { "minMinutes": 117, "maxMinutes": 127 },
         "timeOfDeath": null
@@ -165,6 +170,7 @@
         "name": "Dark Lord",
         "map": "gld_dun04",
         "spawnTime": { "minMinutes": 480, "maxMinutes": 490 },
+        "sprite": "1272.png",
         "timeOfDeath": null
     },
     {
@@ -172,6 +178,7 @@
         "name": "Dark Lord",
         "map": "gl_chyard",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1272.png",
         "timeOfDeath": null
     },
     {
@@ -235,6 +242,7 @@
         "name": "Dracula",
         "map": "gef_dun01",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1389.png",
         "timeOfDeath": null
     },
     {
@@ -256,6 +264,7 @@
         "name": "Eddga",
         "map": "gld_dun01",
         "spawnTime": { "minMinutes": 480, "maxMinutes": 490 },
+        "sprite": "1115.png",
         "timeOfDeath": null
     },
     {
@@ -263,6 +272,7 @@
         "name": "Eddga",
         "map": "pay_fild11",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1115.png",
         "timeOfDeath": null
     },
     {
@@ -298,6 +308,7 @@
         "name": "Garm",
         "map": "xmas_fild01",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1252.png",
         "timeOfDeath": null
     },
     {
@@ -367,7 +378,7 @@
         "id": 35,
         "name": "Hardrock Mammoth",
         "map": "man_fild03",
-        "spawnTime": { "minMinutes": 240, "maxMinutes": 241 },
+        "spawnTime": { "minMinutes": 240, "maxMinutes": 240 },
         "timeOfDeath": null
     },
     {
@@ -375,6 +386,7 @@
         "name": "Ifrit",
         "map": "thor_v03",
         "spawnTime": { "minMinutes": 660, "maxMinutes": 670 },
+        "sprite": "1832.png",
         "timeOfDeath": null
     },
     {
@@ -389,6 +401,7 @@
         "name": "Incantation Samurai",
         "map": "ama_dun03",
         "spawnTime": { "minMinutes": 91, "maxMinutes": 101 },
+        "sprite": "1492.png",
         "timeOfDeath": null
     },
     {
@@ -403,6 +416,7 @@
         "name": "Kiel D-01",
         "map": "kh_dun02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
+        "sprite": "1734.png",
         "timeOfDeath": null
     },
     {
@@ -423,7 +437,7 @@
         "id": 39,
         "name": "Ktullanux",
         "map": "ice_dun03",
-        "spawnTime": { "minMinutes": 120, "maxMinutes": 121 },
+        "spawnTime": { "minMinutes": 120, "maxMinutes": 120 },
         "timeOfDeath": null
     },
     {
@@ -445,6 +459,7 @@
         "name": "Lady Tanee",
         "map": "ayo_dun02",
         "spawnTime": { "minMinutes": 420, "maxMinutes": 430 },
+        "sprite": "1688.png",
         "timeOfDeath": null
     },
     {
@@ -564,6 +579,7 @@
         "name": "Orc Hero",
         "map": "gef_fild14",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1087.png",
         "timeOfDeath": null
     },
     {
@@ -571,6 +587,7 @@
         "name": "Orc Hero",
         "map": "gef_fild02",
         "spawnTime": { "minMinutes": 1440, "maxMinutes": 1450 },
+        "sprite": "1087.png",
         "timeOfDeath": null
     },
     {
@@ -627,6 +644,7 @@
         "name": "Tao Gunka",
         "map": "beach_dun",
         "spawnTime": { "minMinutes": 300, "maxMinutes": 310 },
+        "sprite": "3430.png",
         "timeOfDeath": null
     },
     {
@@ -668,21 +686,21 @@
         "id": 60,
         "name": "Valkyrie 1",
         "map": "odin_tem03",
-        "spawnTime": { "minMinutes": 30, "maxMinutes": 31 },
+        "spawnTime": { "minMinutes": 30, "maxMinutes": 30 },
         "timeOfDeath": null
     },
     {
         "id": 61,
         "name": "Valkyrie 2",
         "map": "odin_tem03",
-        "spawnTime": { "minMinutes": 30, "maxMinutes": 31 },
+        "spawnTime": { "minMinutes": 30, "maxMinutes": 30 },
         "timeOfDeath": null
     },
     {
         "id": 62,
         "name": "Valkyrie 3",
         "map": "odin_tem02",
-        "spawnTime": { "minMinutes": 90, "maxMinutes": 91 },
+        "spawnTime": { "minMinutes": 90, "maxMinutes": 90 },
         "timeOfDeath": null
     },
     {
@@ -690,6 +708,7 @@
         "name": "Valkyrie Randgris",
         "map": "odin_tem03",
         "spawnTime": { "minMinutes": 480, "maxMinutes": 490 },
+        "sprite": "1751.png",
         "timeOfDeath": null
     },
     {
@@ -704,6 +723,7 @@
         "name": "Wounded Morroc",
         "map": "moc_fild22",
         "spawnTime": { "minMinutes": 720, "maxMinutes": 780 },
+        "sprite": "1917.png",
         "timeOfDeath": null
     }
 ]
