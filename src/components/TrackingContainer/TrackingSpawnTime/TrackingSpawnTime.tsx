@@ -57,6 +57,12 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     const mvpDoesNotHaveVariation = mvp.spawnTime.minMinutes === mvp.spawnTime.maxMinutes
     const variationToStartOrAlreadyStarted = variationAboutToStart || variationAlreadyStarted
 
+    const minimumDate = DateTime.now().setZone('Europe/London').minus({ minutes: minimumDifferenceInMinutes })
+    const maximumDate = DateTime.now().setZone('Europe/London').minus({ minutes: maximumDifferenceInMinutes })
+
+    const localMinimumDate = DateTime.now().minus({ minutes: minimumDifferenceInMinutes })
+    const localMaximumDate = DateTime.now().minus({ minutes: maximumDifferenceInMinutes })
+
     return (
         <TimerContainer
             $alreadyInVariation={!mvpDoesNotHaveVariation && variationAlreadyStarted}
@@ -65,18 +71,19 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
             <RelativeDateContainer>
                 {mvpDoesNotHaveVariation ? 'Spawns' : Number(minimumDifferenceInMinutes) >= 0 ? 'Started' : 'Starts'}
 
-                <strong>
-                    {DateTime.now()
-                        .setZone('Europe/London')
-                        .minus({ minutes: minimumDifferenceInMinutes })
-                        .toRelative()}
+                <strong
+                    title={`Server: ${minimumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMinimumDate.toLocaleString(DateTime.DATETIME_MED)}`}
+                >
+                    {minimumDate.toRelative()}
                 </strong>
             </RelativeDateContainer>
 
             {!mvpDoesNotHaveVariation && variationToStartOrAlreadyStarted && (
                 <RelativeDateContainer>
                     {Number(maximumDifferenceInMinutes) >= 0 ? 'Finished' : 'Finishes'}
-                    <strong>
+                    <strong
+                        title={`Server: ${maximumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMaximumDate.toLocaleString(DateTime.DATETIME_MED)}`}
+                    >
                         {DateTime.now()
                             .setZone('Europe/London')
                             .minus({ minutes: maximumDifferenceInMinutes })
