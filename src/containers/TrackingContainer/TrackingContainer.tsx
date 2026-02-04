@@ -5,7 +5,7 @@ import { debounceTime, Subject } from 'rxjs'
 import mvpsFromJson from '@/assets/mvps.json'
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
-import { computeMvpDifferenceTimers, getInitialTrackingStateFromLocalStorage } from '@/helpers/TrackingContainer'
+import { getInitialTrackingStateFromLocalStorage, sortTrackingMvpList } from '@/helpers/TrackingContainer'
 // self
 import {
     Header,
@@ -39,43 +39,8 @@ const reducer = (
         ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
     ]
 
-    const sortedMvps = modifiedMvps.sort((a, b) => {
-        const aHasTime = Boolean(a.timeOfDeath)
-        const bHasTime = Boolean(b.timeOfDeath)
-
-        // 1) timeOfDeath first
-        if (aHasTime !== bHasTime) return aHasTime ? -1 : 1
-
-        // 2) if both have timeOfDeath, prefer positive diffs first, then closest to 0
-        if (aHasTime && bHasTime) {
-            const { minimumDifferenceInMinutes: aDiffRaw } = computeMvpDifferenceTimers(a)
-            const { minimumDifferenceInMinutes: bDiffRaw } = computeMvpDifferenceTimers(b)
-
-            const aDiff = Number(aDiffRaw)
-            const bDiff = Number(bDiffRaw)
-
-            const aIsNegative = aDiff < 0
-            const bIsNegative = bDiff < 0
-
-            // Positive (and 0) first, negative last
-            if (aIsNegative !== bIsNegative) {
-                return aIsNegative ? 1 : -1
-            }
-
-            const aScore = Math.abs(aDiff)
-            const bScore = Math.abs(bDiff)
-
-            if (aScore !== bScore) {
-                return aScore - bScore
-            }
-        }
-
-        // 3) fallback: alphabetical
-        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
-    })
-
-    localStorage.setItem(localStorageMvpsKey, JSON.stringify(sortedMvps))
-    return sortedMvps
+    localStorage.setItem(localStorageMvpsKey, JSON.stringify(modifiedMvps))
+    return modifiedMvps
 }
 
 const TrackingContainer = (): ReactElement => {
@@ -178,7 +143,7 @@ const TrackingContainer = (): ReactElement => {
                         </TrackingRow>
                     </TrackingHeader>
                     <TrackingBody>
-                        {searchFilteredMvps.map((mvp) => {
+                        {searchFilteredMvps.sort(sortTrackingMvpList).map((mvp) => {
                             const { id, name, map, spawnTime, sprite, timeOfDeath } = mvp
 
                             const spriteToUse = sprite ?? 'fallback.png'
@@ -212,9 +177,15 @@ const TrackingContainer = (): ReactElement => {
                                 </TrackingRow>
                             )
                         })}
+
                         {!searchFilteredMvps.length && (
                             <TrackingRow>
-                                <TrackingCell rowSpan={3}>Nothing found search for {searchMvp}...</TrackingCell>
+                                <TrackingCell
+                                    style={{ width: 726, textAlign: 'center', padding: '5rem 0.5rem' }}
+                                    colSpan={4}
+                                >
+                                    Nothing found when searching for <strong>{searchMvp}</strong> 😞
+                                </TrackingCell>
                             </TrackingRow>
                         )}
                     </TrackingBody>

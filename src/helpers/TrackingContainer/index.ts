@@ -1,2 +1,3 @@
 export * from './computeMvpDifferenceTimers'
-export * from './getInitialTrackingStateFromLocalStorage.ts'
+export * from './getInitialTrackingStateFromLocalStorage'
+export * from './sortTrackingMvpList.ts'
