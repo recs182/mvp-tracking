@@ -135,8 +135,6 @@ const TrackingContainer = (): ReactElement => {
     const serverTime = DateTime.now().setZone(defaultTimeZoneName)
     const localTime = DateTime.now()
 
-    const differenceServerAndLocal = serverTime.diff(localTime, 'hours').hours
-
     return (
         <TrackingContainerStyled>
             <Header>
@@ -153,10 +151,7 @@ const TrackingContainer = (): ReactElement => {
                 </SearchContainer>
                 <HeaderDisplayDates>
                     <div>Server time: {serverTime.toFormat('HH:mm')}</div>
-                    <div>
-                        Your time: {localTime.toFormat('HH:mm')}{' '}
-                        {Boolean(differenceServerAndLocal) && <span>{differenceServerAndLocal.toFixed()}</span>}
-                    </div>
+                    <div>Your time: {localTime.toFormat('HH:mm')} </div>
                 </HeaderDisplayDates>
             </Header>
 
