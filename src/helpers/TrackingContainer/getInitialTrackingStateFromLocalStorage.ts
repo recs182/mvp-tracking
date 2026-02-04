@@ -10,8 +10,8 @@ export const getInitialTrackingStateFromLocalStorage: GetInitialTrackingStateFro
     try {
         const parsedState = JSON.parse(jsonState as string)
         return parsedState.map((mvp: any) => {
-            const addSprite = mvpsFromJson.find((mvps) => mvps.id === mvp.id)?.sprite
-            return { ...mvp, addSprite, timeOfDeath: mvp.timeOfDeath ? DateTime.fromISO(mvp.timeOfDeath) : null }
+            const sprite = mvpsFromJson.find((mvps) => mvps.id === mvp.id)?.sprite
+            return { ...mvp, sprite, timeOfDeath: mvp.timeOfDeath ? DateTime.fromISO(mvp.timeOfDeath) : null }
         })
     } catch (error) {
         return null
