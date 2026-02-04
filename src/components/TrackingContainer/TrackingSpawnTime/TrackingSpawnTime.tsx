@@ -21,7 +21,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
 
     const { variationAboutToStart, variationAlreadyStarted, maximumDifferenceInMinutes, minimumDifferenceInMinutes } =
         useMemo<MemoReturn>(() => {
-            const dateUTC = DateTime.now().toUTC()
+            const dateUTC = DateTime.now().setZone('Europe/London')
 
             if (!mvp.timeOfDeath) {
                 return {
@@ -65,14 +65,22 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
             <RelativeDateContainer>
                 {mvpDoesNotHaveVariation ? 'Spawns' : Number(minimumDifferenceInMinutes) >= 0 ? 'Started' : 'Starts'}
 
-                <strong>{DateTime.now().toUTC().minus({ minutes: minimumDifferenceInMinutes }).toRelative()}</strong>
+                <strong>
+                    {DateTime.now()
+                        .setZone('Europe/London')
+                        .minus({ minutes: minimumDifferenceInMinutes })
+                        .toRelative()}
+                </strong>
             </RelativeDateContainer>
 
             {!mvpDoesNotHaveVariation && variationToStartOrAlreadyStarted && (
                 <RelativeDateContainer>
                     {Number(maximumDifferenceInMinutes) >= 0 ? 'Finished' : 'Finishes'}
                     <strong>
-                        {DateTime.now().toUTC().minus({ minutes: maximumDifferenceInMinutes }).toRelative()}
+                        {DateTime.now()
+                            .setZone('Europe/London')
+                            .minus({ minutes: maximumDifferenceInMinutes })
+                            .toRelative()}
                     </strong>
                 </RelativeDateContainer>
             )}

@@ -16,7 +16,7 @@ export const computeMvpDifferenceTimers: ComputeMvpDifferenceTimers = (mvp) => {
         }
     }
 
-    const dateUTC = DateTime.now().toUTC()
+    const dateUTC = DateTime.now().setZone('Europe/London')
 
     const maximumSpawnTime = timeOfDeath.plus({ minutes: spawnTime.maxMinutes })
     const maximumDifferenceInMinutes = dateUTC.diff(maximumSpawnTime, ['minutes']).toObject().minutes

@@ -74,7 +74,7 @@ const TrackingContainer = (): ReactElement => {
     )
 
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
-        const updateTime = DateTime.now().toUTC()
+        const updateTime = DateTime.now().setZone('Europe/London')
         dispatcher({ mvp, updateTime: updateTime })
     }
 

@@ -25,7 +25,7 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
         updateFromTomb(data)
     }
 
-    const maxTime = DateTime.now().toUTC().toFormat('HH:mm')
+    const maxTime = DateTime.now().setZone('Europe/London').toFormat('HH:mm')
     const inputIsEmptyOrErrored = !dirtyFields['tombTime'] || errors['tombTime'] !== undefined
 
     return (
