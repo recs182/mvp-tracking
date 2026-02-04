@@ -46,15 +46,28 @@ const reducer = (
         // 1) timeOfDeath first
         if (aHasTime !== bHasTime) return aHasTime ? -1 : 1
 
-        // 2) if both have timeOfDeath, closest "difference" to 0 first
+        // 2) if both have timeOfDeath, prefer positive diffs first, then closest to 0
         if (aHasTime && bHasTime) {
-            const { minimumDifferenceInMinutes: aDiff } = computeMvpDifferenceTimers(a)
-            const { minimumDifferenceInMinutes: bDiff } = computeMvpDifferenceTimers(b)
+            const { minimumDifferenceInMinutes: aDiffRaw } = computeMvpDifferenceTimers(a)
+            const { minimumDifferenceInMinutes: bDiffRaw } = computeMvpDifferenceTimers(b)
 
-            const aScore = Math.abs(Number(aDiff))
-            const bScore = Math.abs(Number(bDiff))
+            const aDiff = Number(aDiffRaw)
+            const bDiff = Number(bDiffRaw)
 
-            if (aScore !== bScore) return aScore - bScore
+            const aIsNegative = aDiff < 0
+            const bIsNegative = bDiff < 0
+
+            // Positive (and 0) first, negative last
+            if (aIsNegative !== bIsNegative) {
+                return aIsNegative ? 1 : -1
+            }
+
+            const aScore = Math.abs(aDiff)
+            const bScore = Math.abs(bDiff)
+
+            if (aScore !== bScore) {
+                return aScore - bScore
+            }
         }
 
         // 3) fallback: alphabetical

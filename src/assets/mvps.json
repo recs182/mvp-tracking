@@ -57,16 +57,18 @@
     },
     {
         "id": 102,
-        "name": "Assassin Cross I",
+        "name": "Assassin Cross Solo",
         "map": "lhz_dun03",
         "spawnTime": { "minMinutes": 45, "maxMinutes": 82 },
+        "sprite": "20042.png",
         "timeOfDeath": null
     },
     {
         "id": 103,
-        "name": "Assassin Cross ll",
+        "name": "Assassin Cross Summon",
         "map": "lhz_dun03",
         "spawnTime": { "minMinutes": 100, "maxMinutes": 130 },
+        "sprite": "20042.png",
         "timeOfDeath": null
     },
     {
@@ -128,6 +130,7 @@
         "name": "Baphomet",
         "map": "prt_maze03",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1039.png",
         "timeOfDeath": null
     },
     {
@@ -358,6 +361,7 @@
         "name": "Golden Thief Bug",
         "map": "prt_sewb4",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1086.png",
         "timeOfDeath": null
     },
     {
@@ -537,6 +541,7 @@
         "name": "Mistress",
         "map": "mjolnir_04",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1059.png",
         "timeOfDeath": null
     },
     {
@@ -630,6 +635,7 @@
         "name": "RSX_0806",
         "map": "ein_dun02",
         "spawnTime": { "minMinutes": 125, "maxMinutes": 135 },
+        "sprite": "1623.png",
         "timeOfDeath": null
     },
     {
