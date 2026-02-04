@@ -155,7 +155,7 @@ const TrackingContainer = (): ReactElement => {
                     <div>Server time: {serverTime.toFormat('HH:mm')}</div>
                     <div>
                         Your time: {localTime.toFormat('HH:mm')}{' '}
-                        {Boolean(differenceServerAndLocal) && <span>+{differenceServerAndLocal.toFixed()}</span>}
+                        {Boolean(differenceServerAndLocal) && <span>{differenceServerAndLocal.toFixed()}</span>}
                     </div>
                 </HeaderDisplayDates>
             </Header>
