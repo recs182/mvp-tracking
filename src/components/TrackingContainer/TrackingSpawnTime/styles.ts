@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 export const TimerContainer = styled.div<{ $alreadyInVariation: boolean; $variation: boolean }>`
-    width: 165px;
+    width: 180px;
 
     ${(props) => {
         if (props.$alreadyInVariation) {
