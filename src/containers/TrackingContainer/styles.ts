@@ -69,3 +69,16 @@ export const SearchContainer = styled.div`
         font-size: 12px;
     }
 `
+
+export const TimeOfDeathContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+`
+
+export const ResetButton = styled.button`
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+`

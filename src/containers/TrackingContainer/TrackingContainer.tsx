@@ -9,7 +9,9 @@ import { computeMvpDifferenceTimers, getInitialTrackingStateFromLocalStorage } f
 // self
 import {
     MvpNameMapSpawn,
+    ResetButton,
     SearchContainer,
+    TimeOfDeathContainer,
     TrackingBody,
     TrackingCell,
     TrackingContainerStyled,
@@ -27,7 +29,7 @@ const reducer = (
     currentState: RagnarokMvp[],
     beingModified: {
         mvp: RagnarokMvp
-        updateTime: DateTime
+        updateTime: DateTime | null
     }
 ) => {
     const modifiedMvps = [
@@ -84,6 +86,13 @@ const TrackingContainer = (): ReactElement => {
 
             const tombTime = DateTime.now().set({ hour, minute, second: 0, millisecond: 0 })
             dispatcher({ mvp, updateTime: tombTime })
+        },
+        []
+    )
+
+    const resetTimeFromMvpFactory = useCallback(
+        (mvp: RagnarokMvp) => () => {
+            dispatcher({ mvp, updateTime: null })
         },
         []
     )
@@ -147,7 +156,14 @@ const TrackingContainer = (): ReactElement => {
                                         </MvpNameMapSpawn>
                                     </TrackingCell>
                                     <TrackingCell>
-                                        {timeOfDeath && <div>💀 {timeOfDeath?.toFormat('HH:mm')}</div>}
+                                        {timeOfDeath && (
+                                            <TimeOfDeathContainer>
+                                                💀 {timeOfDeath?.toFormat('HH:mm')}
+                                                <ResetButton onClick={resetTimeFromMvpFactory(mvp)} title="Reset">
+                                                    ❌
+                                                </ResetButton>
+                                            </TimeOfDeathContainer>
+                                        )}
                                         <TrackingSpawnTime mvp={mvp} />
                                     </TrackingCell>
                                     <TrackingCell>
