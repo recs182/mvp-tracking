@@ -4,11 +4,10 @@ import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
 // app
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
-import { TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
+import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeMvpDifferenceTimers, getInitialTrackingStateFromLocalStorage } from '@/helpers/TrackingContainer'
 // self
 import {
-    MvpNameMapSpawn,
     ResetButton,
     SearchContainer,
     TimeOfDeathContainer,
@@ -66,6 +65,7 @@ const reducer = (
 const TrackingContainer = (): ReactElement => {
     const searchSubject = useRef(new Subject<string>()).current
 
+    const searchInputRef = useRef<HTMLInputElement>(null)
     const [searchMvp, setSearchMvp] = useState('')
 
     const initialStateFromLocalStorage = getInitialTrackingStateFromLocalStorage()
@@ -75,9 +75,17 @@ const TrackingContainer = (): ReactElement => {
         initialStateFromLocalStorage ?? (mvpsFromJson as RagnarokMvp[])
     )
 
+    const cleanSearchInput = useCallback(() => {
+        setSearchMvp('')
+        if (searchInputRef.current) {
+            searchInputRef.current.value = ''
+        }
+    }, [searchInputRef])
+
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
         const updateTime = DateTime.now().setZone('Europe/London')
         dispatcher({ mvp, updateTime: updateTime })
+        cleanSearchInput()
     }
 
     const fromTombUpdateFactory = useCallback(
@@ -86,6 +94,7 @@ const TrackingContainer = (): ReactElement => {
 
             const tombTime = DateTime.now().set({ hour, minute, second: 0, millisecond: 0 })
             dispatcher({ mvp, updateTime: tombTime })
+            cleanSearchInput()
         },
         []
     )
@@ -126,6 +135,7 @@ const TrackingContainer = (): ReactElement => {
                                         id="searchMvp"
                                         onChange={(changeEvent) => searchSubject.next(changeEvent.target.value)}
                                         placeholder="Dark Lord"
+                                        ref={searchInputRef}
                                         style={{ width: '180px' }}
                                         type="text"
                                     />
@@ -142,18 +152,7 @@ const TrackingContainer = (): ReactElement => {
                             return (
                                 <TrackingRow key={id}>
                                     <TrackingCell>
-                                        <MvpNameMapSpawn>
-                                            <div>{name}</div>
-                                            <div>
-                                                Map: <strong>{map}</strong>
-                                            </div>
-                                            <div>
-                                                Spawn time:{' '}
-                                                <strong>
-                                                    {spawnTime.minMinutes}~{spawnTime.maxMinutes}
-                                                </strong>
-                                            </div>
-                                        </MvpNameMapSpawn>
+                                        <MvpInformation map={map} name={name} spawnTime={spawnTime} />
                                     </TrackingCell>
                                     <TrackingCell>
                                         {timeOfDeath && (

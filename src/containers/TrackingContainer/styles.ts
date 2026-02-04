@@ -12,7 +12,6 @@ export const TrackingTableResponsive = styled.div`
 `
 
 export const TrackingTable = styled.table`
-    min-width: 700px;
     background-color: white;
 
     &,
