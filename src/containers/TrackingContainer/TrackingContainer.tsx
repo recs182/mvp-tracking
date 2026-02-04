@@ -150,7 +150,7 @@ const TrackingContainer = (): ReactElement => {
 
                             return (
                                 <TrackingRow key={id}>
-                                    <TrackingCell style={{ width: 32, paddingRight: 0 }}>
+                                    <TrackingCell style={{ width: 32 }}>
                                         <MvpSprite src={`./mvps/${spriteToUse}`} alt={`${name} sprite`} />
                                     </TrackingCell>
                                     <TrackingCell>

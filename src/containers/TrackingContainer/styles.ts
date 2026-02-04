@@ -12,8 +12,6 @@ export const TrackingTableResponsive = styled.div`
 `
 
 export const TrackingTable = styled.table`
-    background-color: white;
-
     &,
     th,
     td {
@@ -22,8 +20,9 @@ export const TrackingTable = styled.table`
 `
 
 export const TrackingRow = styled.tr`
+    background-color: var(--color-odd-row);
     &:nth-child(even) {
-        background-color: var(--color-secondary);
+        background-color: var(--color-even-row);
     }
 `
 
@@ -31,13 +30,15 @@ export const TrackingHeaderCell = styled.th`
     position: sticky;
     top: 0;
     padding: 0.5rem;
+    color: white;
     text-align: left;
-    background-color: white;
+    background-color: var(--color-even-row);
     z-index: 2;
 `
 
 export const TrackingCell = styled.td`
     padding: 0.5rem;
+    color: white;
 `
 
 export const TrackingHeader = styled.thead``
@@ -73,7 +74,6 @@ export const ResetButton = styled.button`
 
 export const MvpSprite = styled.img`
     width: 32px;
-    mix-blend-mode: multiply;
 `
 
 export const Header = styled.header`

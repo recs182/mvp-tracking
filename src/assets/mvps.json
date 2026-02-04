@@ -4,6 +4,7 @@
         "name": "Amon Ra",
         "map": "moc_pryd06",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1511.png",
         "timeOfDeath": null
     },
     {
@@ -11,6 +12,7 @@
         "name": "Angeling",
         "map": "pay_fild04",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1096.png",
         "timeOfDeath": null
     },
     {
@@ -18,6 +20,7 @@
         "name": "Angeling",
         "map": "xmas_dun01",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1096.png",
         "timeOfDeath": null
     },
     {
@@ -25,6 +28,7 @@
         "name": "Angeling",
         "map": "yuno_fild03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1096.png",
         "timeOfDeath": null
     },
     {
@@ -32,6 +36,7 @@
         "name": "Angeling",
         "map": "lasa_dun03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1096.png",
         "timeOfDeath": null
     },
     {
@@ -39,6 +44,7 @@
         "name": "Angeling",
         "map": "mjolnir_04",
         "spawnTime": { "minMinutes": 30, "maxMinutes": 40 },
+        "sprite": "1096.png",
         "timeOfDeath": null
     },
     {
@@ -46,6 +52,7 @@
         "name": "Archangeling",
         "map": "lasa_dun03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 63 },
+        "sprite": "1388.png",
         "timeOfDeath": null
     },
     {
@@ -53,6 +60,7 @@
         "name": "Archangeling",
         "map": "yuno_fild05",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 63 },
+        "sprite": "1388.png",
         "timeOfDeath": null
     },
     {
@@ -60,7 +68,7 @@
         "name": "Assassin Cross Solo",
         "map": "lhz_dun03",
         "spawnTime": { "minMinutes": 45, "maxMinutes": 82 },
-        "sprite": "20042.png",
+        "sprite": "5481.gif",
         "timeOfDeath": null
     },
     {
@@ -68,14 +76,7 @@
         "name": "Assassin Cross Summon",
         "map": "lhz_dun03",
         "spawnTime": { "minMinutes": 100, "maxMinutes": 130 },
-        "sprite": "20042.png",
-        "timeOfDeath": null
-    },
-    {
-        "id": 90,
-        "name": "Assassin Fly",
-        "map": "rockmi1",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 65 },
+        "sprite": "5481.gif",
         "timeOfDeath": null
     },
     {
@@ -123,6 +124,7 @@
         "name": "Bacsojin / White Lady",
         "map": "lou_dun03",
         "spawnTime": { "minMinutes": 117, "maxMinutes": 127 },
+        "sprite": "1518.png",
         "timeOfDeath": null
     },
     {
@@ -138,6 +140,7 @@
         "name": "Beelzebub",
         "map": "abbey03",
         "spawnTime": { "minMinutes": 720, "maxMinutes": 730 },
+        "sprite": "1874.png",
         "timeOfDeath": null
     },
     {
@@ -145,6 +148,7 @@
         "name": "Bio3 MVP",
         "map": "lhz_dun03",
         "spawnTime": { "minMinutes": 100, "maxMinutes": 130 },
+        "sprite": "lhz_dun03.png",
         "timeOfDeath": null
     },
     {
@@ -152,6 +156,7 @@
         "name": "Bloody Knight",
         "map": "gl_knt02",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1268.png",
         "timeOfDeath": null
     },
     {
@@ -159,6 +164,7 @@
         "name": "Boitata",
         "map": "bra_dun02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "2068.png",
         "timeOfDeath": null
     },
     {
@@ -166,6 +172,7 @@
         "name": "Corrupted Soul",
         "map": "OGH 1",
         "spawnTime": { "minMinutes": 960, "maxMinutes": 961 },
+        "sprite": "2475.png",
         "timeOfDeath": null
     },
     {
@@ -189,6 +196,7 @@
         "name": "Detale",
         "map": "abyss_03",
         "spawnTime": { "minMinutes": 180, "maxMinutes": 190 },
+        "sprite": "1719.png",
         "timeOfDeath": null
     },
     {
@@ -196,6 +204,7 @@
         "name": "Deviling",
         "map": "lasa_dun03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1582.png",
         "timeOfDeath": null
     },
     {
@@ -203,6 +212,7 @@
         "name": "Deviling",
         "map": "yuno_fild03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1582.png",
         "timeOfDeath": null
     },
     {
@@ -210,6 +220,7 @@
         "name": "Deviling",
         "map": "pay_fild04",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
+        "sprite": "1582.png",
         "timeOfDeath": null
     },
     {
@@ -217,13 +228,7 @@
         "name": "Deviling",
         "map": "yuno_fild03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
-        "timeOfDeath": null
-    },
-    {
-        "id": 77,
-        "name": "Dommy Mummy",
-        "map": "gl_prison1",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1582.png",
         "timeOfDeath": null
     },
     {
@@ -231,6 +236,7 @@
         "name": "Doppelganger",
         "map": "gef_dun02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1046.png",
         "timeOfDeath": null
     },
     {
@@ -238,6 +244,7 @@
         "name": "Doppelganger",
         "map": "gld_dun02",
         "spawnTime": { "minMinutes": 480, "maxMinutes": 490 },
+        "sprite": "1046.png",
         "timeOfDeath": null
     },
     {
@@ -253,6 +260,7 @@
         "name": "Drake",
         "map": "treasure02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1112.png",
         "timeOfDeath": null
     },
     {
@@ -260,6 +268,7 @@
         "name": "Duneyrr",
         "map": "nyd_01",
         "spawnTime": { "minMinutes": 15, "maxMinutes": 15 },
+        "sprite": "2018.png",
         "timeOfDeath": null
     },
     {
@@ -283,6 +292,7 @@
         "name": "Egnigem Cenia",
         "map": "lhz_dun02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1658.png",
         "timeOfDeath": null
     },
     {
@@ -290,13 +300,7 @@
         "name": "Evil Snake Lord",
         "map": "gon_dun03",
         "spawnTime": { "minMinutes": 94, "maxMinutes": 104 },
-        "timeOfDeath": null
-    },
-    {
-        "id": 85,
-        "name": "Executioner CT4",
-        "map": "c_tower4",
-        "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
+        "sprite": "1418.png",
         "timeOfDeath": null
     },
     {
@@ -304,6 +308,7 @@
         "name": "Fallen Bishop Hibram",
         "map": "abbey02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1871.png",
         "timeOfDeath": null
     },
     {
@@ -319,6 +324,7 @@
         "name": "Ghostring",
         "map": "lasa_dun03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1120.png",
         "timeOfDeath": null
     },
     {
@@ -326,6 +332,7 @@
         "name": "Ghostring",
         "map": "prt_maze03",
         "spawnTime": { "minMinutes": 113, "maxMinutes": 170 },
+        "sprite": "1120.png",
         "timeOfDeath": null
     },
     {
@@ -333,6 +340,7 @@
         "name": "Ghostring",
         "map": "treasure02",
         "spawnTime": { "minMinutes": 33, "maxMinutes": 53 },
+        "sprite": "1120.png",
         "timeOfDeath": null
     },
     {
@@ -340,6 +348,7 @@
         "name": "Ghostring",
         "map": "gld_dun04",
         "spawnTime": { "minMinutes": 240, "maxMinutes": 360 },
+        "sprite": "1120.png",
         "timeOfDeath": null
     },
     {
@@ -347,6 +356,7 @@
         "name": "Ghostring",
         "map": "pay_fild04",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1120.png",
         "timeOfDeath": null
     },
     {
@@ -354,6 +364,7 @@
         "name": "Gloom Under Night",
         "map": "ra_san05",
         "spawnTime": { "minMinutes": 300, "maxMinutes": 310 },
+        "sprite": "1768.png",
         "timeOfDeath": null
     },
     {
@@ -369,6 +380,7 @@
         "name": "Gopinch",
         "map": "mosk_dun03",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1885.png",
         "timeOfDeath": null
     },
     {
@@ -376,6 +388,7 @@
         "name": "Green Maiden",
         "map": "lou_dun03",
         "spawnTime": { "minMinutes": 50, "maxMinutes": 80 },
+        "sprite": "1631.png",
         "timeOfDeath": null
     },
     {
@@ -383,6 +396,7 @@
         "name": "Hardrock Mammoth",
         "map": "man_fild03",
         "spawnTime": { "minMinutes": 240, "maxMinutes": 240 },
+        "sprite": "1990.png",
         "timeOfDeath": null
     },
     {
@@ -394,25 +408,11 @@
         "timeOfDeath": null
     },
     {
-        "id": 95,
-        "name": "Ignis",
-        "map": "ash_dun01",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
-        "timeOfDeath": null
-    },
-    {
         "id": 37,
         "name": "Incantation Samurai",
         "map": "ama_dun03",
         "spawnTime": { "minMinutes": 91, "maxMinutes": 101 },
         "sprite": "1492.png",
-        "timeOfDeath": null
-    },
-    {
-        "id": 68,
-        "name": "Jabberwock",
-        "map": "untomb_03",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 66 },
         "timeOfDeath": null
     },
     {
@@ -424,17 +424,11 @@
         "timeOfDeath": null
     },
     {
-        "id": 71,
-        "name": "King Poring",
-        "map": "lasa_dun03",
-        "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
-        "timeOfDeath": null
-    },
-    {
         "id": 98,
         "name": "Kraken",
         "map": "iz_dun05",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 150 },
+        "sprite": "2202.png",
         "timeOfDeath": null
     },
     {
@@ -442,6 +436,7 @@
         "name": "Ktullanux",
         "map": "ice_dun03",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 120 },
+        "sprite": "1779.png",
         "timeOfDeath": null
     },
     {
@@ -449,13 +444,7 @@
         "name": "Ktullanux PS",
         "map": "",
         "spawnTime": { "minMinutes": 240, "maxMinutes": 245 },
-        "timeOfDeath": null
-    },
-    {
-        "id": 67,
-        "name": "Lady Huo",
-        "map": "untomb_05s",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 65 },
+        "sprite": "1779.png",
         "timeOfDeath": null
     },
     {
@@ -467,24 +456,11 @@
         "timeOfDeath": null
     },
     {
-        "id": 66,
-        "name": "Logi",
-        "map": "muspmi2",
-        "spawnTime": { "minMinutes": 120, "maxMinutes": 125 },
-        "timeOfDeath": null
-    },
-    {
         "id": 41,
         "name": "Lord of Death",
         "map": "nifflheim",
         "spawnTime": { "minMinutes": 133, "maxMinutes": 134 },
-        "timeOfDeath": null
-    },
-    {
-        "id": 84,
-        "name": "MAID",
-        "map": "ash_fac",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "21579.png",
         "timeOfDeath": null
     },
     {
@@ -492,6 +468,7 @@
         "name": "Maya",
         "map": "gld_dun03",
         "spawnTime": { "minMinutes": 480, "maxMinutes": 490 },
+        "sprite": "1289.png",
         "timeOfDeath": null
     },
     {
@@ -499,6 +476,7 @@
         "name": "Maya",
         "map": "anthell02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1289.png",
         "timeOfDeath": null
     },
     {
@@ -506,6 +484,7 @@
         "name": "Maya Purple",
         "map": "anthell01",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
+        "sprite": "1147.png",
         "timeOfDeath": null
     },
     {
@@ -513,6 +492,7 @@
         "name": "Maya Purple",
         "map": "gld_dun03",
         "spawnTime": { "minMinutes": 20, "maxMinutes": 30 },
+        "sprite": "1147.png",
         "timeOfDeath": null
     },
     {
@@ -520,6 +500,7 @@
         "name": "Maya Purple01 GD",
         "map": "gld_dun03",
         "spawnTime": { "minMinutes": 20, "maxMinutes": 30 },
+        "sprite": "1147.png",
         "timeOfDeath": null
     },
     {
@@ -527,6 +508,7 @@
         "name": "Maya Purple02 GD",
         "map": "gld_dun03",
         "spawnTime": { "minMinutes": 20, "maxMinutes": 30 },
+        "sprite": "1147.png",
         "timeOfDeath": null
     },
     {
@@ -534,6 +516,7 @@
         "name": "Maya Purple03 GD",
         "map": "gld_dun03",
         "spawnTime": { "minMinutes": 20, "maxMinutes": 30 },
+        "sprite": "1147.png",
         "timeOfDeath": null
     },
     {
@@ -549,6 +532,7 @@
         "name": "Moonlight Flower",
         "map": "pay_dun04",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1150.png",
         "timeOfDeath": null
     },
     {
@@ -556,6 +540,7 @@
         "name": "Mutant Dragonoid",
         "map": "cmd_fild03",
         "spawnTime": { "minMinutes": 30, "maxMinutes": 35 },
+        "sprite": "1262.png",
         "timeOfDeath": null
     },
     {
@@ -563,6 +548,7 @@
         "name": "Mysteltainn",
         "map": "alde_dun04",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
+        "sprite": "1203.png",
         "timeOfDeath": null
     },
     {
@@ -570,6 +556,7 @@
         "name": "Mysteltainn",
         "map": "gl_cas02",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
+        "sprite": "1203.png",
         "timeOfDeath": null
     },
     {
@@ -577,6 +564,7 @@
         "name": "Mysteltainn",
         "map": "gl_knt02",
         "spawnTime": { "minMinutes": 30, "maxMinutes": 50 },
+        "sprite": "1203.png",
         "timeOfDeath": null
     },
     {
@@ -600,6 +588,7 @@
         "name": "Orc Lord",
         "map": "gef_fild10",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1190.png",
         "timeOfDeath": null
     },
     {
@@ -607,6 +596,7 @@
         "name": "Osiris",
         "map": "moc_pryd04",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1038.png",
         "timeOfDeath": null
     },
     {
@@ -614,6 +604,7 @@
         "name": "Pharaoh",
         "map": "in_sphinx5",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1157.png",
         "timeOfDeath": null
     },
     {
@@ -621,13 +612,7 @@
         "name": "Phreeoni",
         "map": "moc_fild17",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
-        "timeOfDeath": null
-    },
-    {
-        "id": 88,
-        "name": "Rekenber General",
-        "map": "mjo_dun03r",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1159.png",
         "timeOfDeath": null
     },
     {
@@ -643,6 +628,7 @@
         "name": "Stormy Knight",
         "map": "xmas_dun02",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1251.png",
         "timeOfDeath": null
     },
     {
@@ -658,6 +644,7 @@
         "name": "Tendrillion",
         "map": "spl_fild03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 61 },
+        "sprite": "1991.png",
         "timeOfDeath": null
     },
     {
@@ -665,6 +652,7 @@
         "name": "Thanatos",
         "map": "thana_boss",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 121 },
+        "sprite": "1708.png",
         "timeOfDeath": null
     },
     {
@@ -672,6 +660,7 @@
         "name": "Toad",
         "map": "cmd_fild03",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1089.png",
         "timeOfDeath": null
     },
     {
@@ -679,6 +668,7 @@
         "name": "Toad",
         "map": "gef_fild01",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
+        "sprite": "1089.png",
         "timeOfDeath": null
     },
     {
@@ -686,6 +676,7 @@
         "name": "Turtle General",
         "map": "tur_dun04",
         "spawnTime": { "minMinutes": 60, "maxMinutes": 70 },
+        "sprite": "1312.png",
         "timeOfDeath": null
     },
     {
@@ -693,6 +684,7 @@
         "name": "Valkyrie 1",
         "map": "odin_tem03",
         "spawnTime": { "minMinutes": 30, "maxMinutes": 30 },
+        "sprite": "2037.png",
         "timeOfDeath": null
     },
     {
@@ -700,6 +692,7 @@
         "name": "Valkyrie 2",
         "map": "odin_tem03",
         "spawnTime": { "minMinutes": 30, "maxMinutes": 30 },
+        "sprite": "2037.png",
         "timeOfDeath": null
     },
     {
@@ -707,6 +700,7 @@
         "name": "Valkyrie 3",
         "map": "odin_tem02",
         "spawnTime": { "minMinutes": 90, "maxMinutes": 90 },
+        "sprite": "2037.png",
         "timeOfDeath": null
     },
     {
@@ -722,6 +716,7 @@
         "name": "Vesper",
         "map": "jupe_core",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
+        "sprite": "1685.png",
         "timeOfDeath": null
     },
     {
