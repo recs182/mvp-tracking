@@ -31,7 +31,7 @@ export const MvpInformation = memo<MvpInformationProps>(({ map, name, spawnTime 
                 Map: <strong>{map}</strong>
             </div>
             <div>
-                Spawn time: <strong>{spawnTimeLabel}</strong>
+                Spawn: <strong>{spawnTimeLabel}</strong>
             </div>
         </MvpInformationStyled>
     )
