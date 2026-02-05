@@ -17,7 +17,7 @@ export const UpdateButton = styled.button`
     }
 
     &:disabled {
-        opacity: 0.75;
+        opacity: 0.4;
         cursor: not-allowed;
         &:hover {
             color: #f8f9fa;
@@ -29,7 +29,7 @@ export const UpdateButton = styled.button`
 
 export const InputTombTime = styled.input<{ $hasError?: boolean }>`
     padding: 0.5rem;
-    width: 120px;
+    width: 55px;
     border: 1px solid var(--color-primary);
     border-radius: 0.25rem;
 
