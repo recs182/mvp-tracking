@@ -1,17 +1,17 @@
-import { type ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { Fragment, type ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
 // app
-import mvpsFromJson from '@/assets/mvps.json'
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
+import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
 // self
 import {
+    ActionButton,
     Header,
     HeaderDisplayDates,
     MvpSprite,
-    ResetButton,
     SearchContainer,
     TimeOfDeathContainer,
     TrackingBody,
@@ -25,7 +25,6 @@ import {
     UpdateContainer,
 } from './styles'
 import type { RagnarokMvp } from './types'
-import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
 
 const reducer = (
     currentState: RagnarokMvp[],
@@ -39,29 +38,23 @@ const reducer = (
         ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
     ]
 
-    localStorage.setItem(
-        localStorageMvpsKey,
-        JSON.stringify(
-            modifiedMvps.reduce((merge, mvp) => {
-                return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath } : merge
-            }, {})
-        )
-    )
+    // persist the times of death in localStorage in case of refresh
+    const toPersistInLocalStorage = modifiedMvps.reduce((merge, mvp) => {
+        return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath } : merge
+    }, {})
+    localStorage.setItem(localStorageMvpsKey, JSON.stringify(toPersistInLocalStorage))
+
     return modifiedMvps
 }
 
 const TrackingContainer = (): ReactElement => {
     const searchSubject = useRef(new Subject<string>()).current
-
     const searchInputRef = useRef<HTMLInputElement>(null)
+
     const [searchMvp, setSearchMvp] = useState('')
+    const [undoState, setUndoState] = useState<[number, DateTime | null][]>([])
 
-    const initialStateFromLocalStorage = computeTrackingInitialState()
-
-    const [ragnarokMvps, dispatcher] = useReducer(
-        reducer,
-        initialStateFromLocalStorage ?? (mvpsFromJson as RagnarokMvp[])
-    )
+    const [ragnarokMvps, dispatcher] = useReducer(reducer, computeTrackingInitialState())
 
     const cleanSearchInput = useCallback(() => {
         setSearchMvp('')
@@ -70,9 +63,16 @@ const TrackingContainer = (): ReactElement => {
         }
     }, [searchInputRef])
 
+    const addActionToUndoState = useCallback((id: number, timeOfDeath: DateTime | null) => {
+        setUndoState((currentState) => {
+            return [[id, timeOfDeath] as [number, DateTime], ...currentState].slice(0, 5)
+        })
+    }, [])
+
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
         const updateTime = DateTime.now().setZone(defaultTimeZoneName)
-        dispatcher({ mvp, updateTime: updateTime })
+        addActionToUndoState(mvp.id, mvp.timeOfDeath)
+        dispatcher({ mvp, updateTime })
         cleanSearchInput()
     }
 
@@ -80,13 +80,9 @@ const TrackingContainer = (): ReactElement => {
         (mvp: RagnarokMvp) => (data: { tombTime: string }) => {
             const [hour, minute] = data.tombTime.split(':').map(Number)
 
-            console.log('hour, minute', hour, minute)
-
             const tombTime = DateTime.now()
                 .setZone(defaultTimeZoneName)
                 .set({ hour, minute, second: 0, millisecond: 0 })
-
-            console.log('tombTime', tombTime, tombTime.toLocaleString(DateTime.DATETIME_MED))
 
             dispatcher({ mvp, updateTime: tombTime })
             cleanSearchInput()
@@ -96,7 +92,25 @@ const TrackingContainer = (): ReactElement => {
 
     const resetTimeFromMvpFactory = useCallback(
         (mvp: RagnarokMvp) => () => {
+            if (mvp.timeOfDeath) {
+                addActionToUndoState(mvp.id, mvp.timeOfDeath)
+            }
+
             dispatcher({ mvp, updateTime: null })
+        },
+        []
+    )
+
+    const undoActionFactory = useCallback(
+        (mvp: RagnarokMvp) => () => {
+            setUndoState((currentState) => {
+                const [_, timeOfDeath] = currentState[0]
+
+                // update regardless if it is null or actual date
+                dispatcher({ mvp, updateTime: timeOfDeath })
+
+                return currentState.slice(1)
+            })
         },
         []
     )
@@ -154,6 +168,7 @@ const TrackingContainer = (): ReactElement => {
                             const { id, name, map, spawnTime, sprite, timeOfDeath } = mvp
 
                             const spriteToUse = sprite ?? 'fallback.png'
+                            const hasActionToUndo = Array.isArray(undoState.find((tuple) => tuple[0] === mvp.id))
 
                             return (
                                 <TrackingRow key={id}>
@@ -164,14 +179,21 @@ const TrackingContainer = (): ReactElement => {
                                         <MvpInformation map={map} name={name} spawnTime={spawnTime} />
                                     </TrackingCell>
                                     <TrackingCell>
-                                        {timeOfDeath && (
-                                            <TimeOfDeathContainer>
-                                                💀 {timeOfDeath?.toFormat('HH:mm')}
-                                                <ResetButton onClick={resetTimeFromMvpFactory(mvp)} title="Reset">
-                                                    ❌
-                                                </ResetButton>
-                                            </TimeOfDeathContainer>
-                                        )}
+                                        <TimeOfDeathContainer>
+                                            {timeOfDeath && (
+                                                <Fragment>
+                                                    💀 {timeOfDeath?.toFormat('HH:mm')}
+                                                    <ActionButton onClick={resetTimeFromMvpFactory(mvp)} title="Remove">
+                                                        ❌
+                                                    </ActionButton>
+                                                </Fragment>
+                                            )}
+                                            {hasActionToUndo && (
+                                                <ActionButton onClick={undoActionFactory(mvp)} title="Undo">
+                                                    ◀️
+                                                </ActionButton>
+                                            )}
+                                        </TimeOfDeathContainer>
                                         <TrackingSpawnTime mvp={mvp} />
                                     </TrackingCell>
                                     <TrackingCell>

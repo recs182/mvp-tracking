@@ -12,6 +12,7 @@ export const TrackingTableResponsive = styled.div`
 `
 
 export const TrackingTable = styled.table`
+    min-width: 710px;
     &,
     th,
     td {
@@ -63,10 +64,11 @@ export const TimeOfDeathContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.5rem;
 `
 
-export const ResetButton = styled.button`
+export const ActionButton = styled.button`
+    padding: 0;
     background-color: transparent;
     border: none;
     cursor: pointer;
