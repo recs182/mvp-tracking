@@ -32,27 +32,11 @@
         "timeOfDeath": null
     },
     {
-        "id": 74,
-        "name": "Angeling",
-        "map": "lasa_dun03",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
-        "sprite": "1096.png",
-        "timeOfDeath": null
-    },
-    {
         "id": 69,
         "name": "Angeling",
         "map": "mjolnir_04",
         "spawnTime": { "minMinutes": 30, "maxMinutes": 40 },
         "sprite": "1096.png",
-        "timeOfDeath": null
-    },
-    {
-        "id": 81,
-        "name": "Archangeling",
-        "map": "lasa_dun03",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 63 },
-        "sprite": "1388.png",
         "timeOfDeath": null
     },
     {
@@ -121,7 +105,7 @@
     },
     {
         "id": 11,
-        "name": "Bacsojin / White Lady",
+        "name": "Bacsojin/White Lady",
         "map": "lou_dun03",
         "spawnTime": { "minMinutes": 117, "maxMinutes": 127 },
         "sprite": "1518.png",
@@ -200,14 +184,6 @@
         "timeOfDeath": null
     },
     {
-        "id": 75,
-        "name": "Deviling",
-        "map": "lasa_dun03",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
-        "sprite": "1582.png",
-        "timeOfDeath": null
-    },
-    {
         "id": 70,
         "name": "Deviling",
         "map": "yuno_fild03",
@@ -265,7 +241,15 @@
     },
     {
         "id": 96,
-        "name": "Duneyrr",
+        "name": "Duneyrr 1",
+        "map": "nyd_01",
+        "spawnTime": { "minMinutes": 15, "maxMinutes": 15 },
+        "sprite": "2018.png",
+        "timeOfDeath": null
+    },
+    {
+        "id": 966,
+        "name": "Duneyrr 2",
         "map": "nyd_01",
         "spawnTime": { "minMinutes": 15, "maxMinutes": 15 },
         "sprite": "2018.png",
@@ -317,14 +301,6 @@
         "map": "xmas_fild01",
         "spawnTime": { "minMinutes": 120, "maxMinutes": 130 },
         "sprite": "1252.png",
-        "timeOfDeath": null
-    },
-    {
-        "id": 76,
-        "name": "Ghostring",
-        "map": "lasa_dun03",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 90 },
-        "sprite": "1120.png",
         "timeOfDeath": null
     },
     {
@@ -459,7 +435,7 @@
         "id": 41,
         "name": "Lord of Death",
         "map": "nifflheim",
-        "spawnTime": { "minMinutes": 133, "maxMinutes": 134 },
+        "spawnTime": { "minMinutes": 133, "maxMinutes": 133 },
         "sprite": "21579.png",
         "timeOfDeath": null
     },
@@ -544,30 +520,6 @@
         "timeOfDeath": null
     },
     {
-        "id": 78,
-        "name": "Mysteltainn",
-        "map": "alde_dun04",
-        "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
-        "sprite": "1203.png",
-        "timeOfDeath": null
-    },
-    {
-        "id": 80,
-        "name": "Mysteltainn",
-        "map": "gl_cas02",
-        "spawnTime": { "minMinutes": 120, "maxMinutes": 180 },
-        "sprite": "1203.png",
-        "timeOfDeath": null
-    },
-    {
-        "id": 79,
-        "name": "Mysteltainn",
-        "map": "gl_knt02",
-        "spawnTime": { "minMinutes": 30, "maxMinutes": 50 },
-        "sprite": "1203.png",
-        "timeOfDeath": null
-    },
-    {
         "id": 49,
         "name": "Orc Hero",
         "map": "gef_fild14",
@@ -643,7 +595,7 @@
         "id": 57,
         "name": "Tendrillion",
         "map": "spl_fild03",
-        "spawnTime": { "minMinutes": 60, "maxMinutes": 61 },
+        "spawnTime": { "minMinutes": 60, "maxMinutes": 60 },
         "sprite": "1991.png",
         "timeOfDeath": null
     },
@@ -651,7 +603,7 @@
         "id": 58,
         "name": "Thanatos",
         "map": "thana_boss",
-        "spawnTime": { "minMinutes": 120, "maxMinutes": 121 },
+        "spawnTime": { "minMinutes": 120, "maxMinutes": 120 },
         "sprite": "1708.png",
         "timeOfDeath": null
     },
@@ -726,5 +678,26 @@
         "spawnTime": { "minMinutes": 720, "maxMinutes": 780 },
         "sprite": "1917.png",
         "timeOfDeath": null
+    },
+    {
+        "id": 12591,
+        "name": "Gryphon 1",
+        "map": "ra_fild01",
+        "spawnTime": { "minMinutes": 60, "maxMinutes": 60 },
+        "sprite": "1259.png"
+    },
+    {
+        "id": 12592,
+        "name": "Gryphon 2",
+        "map": "ra_fild01",
+        "spawnTime": { "minMinutes": 60, "maxMinutes": 60 },
+        "sprite": "1259.png"
+    },
+    {
+        "id": 12593,
+        "name": "Gryphon 3",
+        "map": "ra_fild01",
+        "spawnTime": { "minMinutes": 60, "maxMinutes": 60 },
+        "sprite": "1259.png"
     }
 ]

@@ -1,4 +1,4 @@
-import { memo, type ReactElement, useEffect, useMemo, useState } from 'react'
+import { Fragment, memo, type ReactElement, useEffect, useMemo, useState } from 'react'
 import { DateTime } from 'luxon'
 // app
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
@@ -66,12 +66,13 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     const localMaximumDate = DateTime.now().minus({ minutes: maximumDifferenceInMinutes })
 
     return (
-        <TimerContainer
-            $alreadyInVariation={!mvpDoesNotHaveVariation && variationAlreadyStarted}
-            $variation={!mvpDoesNotHaveVariation && variationAboutToStart}
-        >
+        <TimerContainer $alreadyInVariation={variationAlreadyStarted} $variation={variationAboutToStart}>
             <RelativeDateContainer>
-                {mvpDoesNotHaveVariation ? 'Spawns' : Number(minimumDifferenceInMinutes) >= 0 ? 'Started' : 'Starts'}
+                {mvpDoesNotHaveVariation ? (
+                    <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Spawned' : 'Spawns'}</Fragment>
+                ) : (
+                    <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Started' : 'Starts'}</Fragment>
+                )}
 
                 <strong
                     title={`Server: ${minimumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMinimumDate.toLocaleString(DateTime.DATETIME_MED)}`}
