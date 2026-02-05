@@ -5,7 +5,7 @@ import { debounceTime, Subject } from 'rxjs'
 import mvpsFromJson from '@/assets/mvps.json'
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
-import { getInitialTrackingStateFromLocalStorage, sortTrackingMvpList } from '@/helpers/TrackingContainer'
+import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
 // self
 import {
     Header,
@@ -39,7 +39,14 @@ const reducer = (
         ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
     ]
 
-    localStorage.setItem(localStorageMvpsKey, JSON.stringify(modifiedMvps))
+    localStorage.setItem(
+        localStorageMvpsKey,
+        JSON.stringify(
+            modifiedMvps.reduce((merge, mvp) => {
+                return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath } : merge
+            }, {})
+        )
+    )
     return modifiedMvps
 }
 
@@ -49,7 +56,7 @@ const TrackingContainer = (): ReactElement => {
     const searchInputRef = useRef<HTMLInputElement>(null)
     const [searchMvp, setSearchMvp] = useState('')
 
-    const initialStateFromLocalStorage = getInitialTrackingStateFromLocalStorage()
+    const initialStateFromLocalStorage = computeTrackingInitialState()
 
     const [ragnarokMvps, dispatcher] = useReducer(
         reducer,
