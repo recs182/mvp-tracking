@@ -17,7 +17,7 @@ export const UpdateButton = styled.button`
     }
 
     &:disabled {
-        opacity: 0.75;
+        opacity: 0.4;
         cursor: not-allowed;
         &:hover {
             color: #f8f9fa;
