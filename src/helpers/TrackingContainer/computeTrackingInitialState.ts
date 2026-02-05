@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon'
-import mvpsFromJson from '@/assets/mvps.json'
+import mvpsFromStatic from '@/assets/mvps'
 import { localStorageMvpsKey } from '@/constants.ts'
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
 
-type ComputeTrackingInitialState = () => RagnarokMvp[] | null
+type ComputeTrackingInitialState = () => RagnarokMvp[]
 
 export const computeTrackingInitialState: ComputeTrackingInitialState = () => {
     const jsonState = localStorage.getItem(localStorageMvpsKey)
@@ -15,7 +15,7 @@ export const computeTrackingInitialState: ComputeTrackingInitialState = () => {
               }, {})
             : parsedState
 
-        return mvpsFromJson.map((mvp) => {
+        return mvpsFromStatic.map((mvp) => {
             const timeOfDeath = retroState[mvp.id]
             return {
                 ...mvp,
@@ -23,6 +23,6 @@ export const computeTrackingInitialState: ComputeTrackingInitialState = () => {
             }
         })
     } catch (error) {
-        return mvpsFromJson
+        return mvpsFromStatic
     }
 }

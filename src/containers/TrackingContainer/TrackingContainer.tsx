@@ -2,10 +2,10 @@ import { Fragment, type ReactElement, useCallback, useEffect, useReducer, useRef
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
 // app
-import mvpsFromJson from '@/assets/mvps.json'
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
+import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
 // self
 import {
     ActionButton,
@@ -25,7 +25,6 @@ import {
     UpdateContainer,
 } from './styles'
 import type { RagnarokMvp } from './types'
-import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
 
 const reducer = (
     currentState: RagnarokMvp[],
@@ -54,12 +53,8 @@ const TrackingContainer = (): ReactElement => {
 
     const [searchMvp, setSearchMvp] = useState('')
     const [undoState, setUndoState] = useState<[number, DateTime | null][]>([])
-    const initialStateFromLocalStorage = computeTrackingInitialState()
 
-    const [ragnarokMvps, dispatcher] = useReducer(
-        reducer,
-        initialStateFromLocalStorage ?? (mvpsFromJson as RagnarokMvp[])
-    )
+    const [ragnarokMvps, dispatcher] = useReducer(reducer, computeTrackingInitialState())
 
     const cleanSearchInput = useCallback(() => {
         setSearchMvp('')
