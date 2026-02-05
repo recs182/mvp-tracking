@@ -1,10 +1,12 @@
 import TrackingContainer from '@/containers/TrackingContainer/TrackingContainer'
-import { BrowserRouter, Route } from 'react-router'
+import { BrowserRouter, Route, Routes } from 'react-router'
 
 function Router() {
     return (
         <BrowserRouter>
-            <Route index element={<TrackingContainer />} />
+            <Routes>
+                <Route element={<TrackingContainer />} index path="/mvp-tracking" />
+            </Routes>
         </BrowserRouter>
     )
 }
