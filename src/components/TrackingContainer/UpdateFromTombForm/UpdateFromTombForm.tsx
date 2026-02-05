@@ -1,7 +1,11 @@
 import { memo, type ReactElement } from 'react'
 import { useForm } from 'react-hook-form'
+import { useMaskito } from '@maskito/react'
+import { maskitoTimeOptionsGenerator } from '@maskito/kit'
+import { DateTime } from 'luxon'
 // app
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
+import { defaultTimeZoneName } from '@/constants'
 // self
 import { FormContainer } from './styles'
 
@@ -11,7 +15,11 @@ type UpdateFromTombFormProps = {
     updateFromTomb: (data: FormValues) => void
 }
 
+const maskitoOptions = maskitoTimeOptionsGenerator({ mode: 'HH:MM' })
+
 export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTomb }): ReactElement => {
+    const maskitoRef = useMaskito({ options: maskitoOptions })
+
     const {
         handleSubmit,
         formState: { errors, dirtyFields },
@@ -26,12 +34,21 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
 
     const inputIsEmptyOrErrored = !dirtyFields['tombTime'] || errors['tombTime'] !== undefined
 
+    const placeholder = DateTime.now().setZone(defaultTimeZoneName).toFormat('HH:mm')
+
+    const registerInput = register('tombTime', { required: true })
+
     return (
         <FormContainer onSubmit={handleSubmit(preUpdateHandler)}>
             <InputTombTime
-                {...register('tombTime', { required: true })}
+                {...registerInput}
+                ref={(node) => {
+                    maskitoRef(node)
+                    registerInput.ref(node)
+                }}
                 $hasError={Boolean(errors['tombTime'])}
-                type="time"
+                type="text"
+                placeholder={placeholder}
             />
             <UpdateButton disabled={inputIsEmptyOrErrored} type="submit">
                 Calculate

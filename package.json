@@ -16,6 +16,9 @@
   "devDependencies": {
     "@eslint/js": "9.39.1",
     "@fontsource-variable/open-sans": "^5.2.7",
+    "@maskito/core": "^5.1.0",
+    "@maskito/kit": "^5.1.0",
+    "@maskito/react": "^5.1.0",
     "@types/luxon": "^3.7.1",
     "@types/node": "24.10.1",
     "@types/react": "19.2.5",

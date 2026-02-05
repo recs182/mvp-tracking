@@ -29,7 +29,7 @@ export const UpdateButton = styled.button`
 
 export const InputTombTime = styled.input<{ $hasError?: boolean }>`
     padding: 0.5rem;
-    width: 120px;
+    width: 55px;
     border: 1px solid var(--color-primary);
     border-radius: 0.25rem;
 
