@@ -5,7 +5,7 @@ import { debounceTime, Subject } from 'rxjs'
 import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
-import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
+import { defaultTimeZoneName, localStorageMvpsKey, localStorageMvpsShareableKey } from '@/constants.ts'
 // self
 import {
     ActionButton,
@@ -26,35 +26,40 @@ import {
 } from './styles'
 import type { RagnarokMvp } from './types'
 
-const reducer = (
-    currentState: RagnarokMvp[],
-    beingModified: {
-        mvp: RagnarokMvp
-        updateTime: DateTime | null
+const reducer =
+    (shareable: boolean) =>
+    (
+        currentState: RagnarokMvp[],
+        beingModified: {
+            mvp: RagnarokMvp
+            updateTime: DateTime | null
+        }
+    ) => {
+        const modifiedMvps = [
+            { ...beingModified.mvp, timeOfDeath: beingModified.updateTime },
+            ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
+        ]
+
+        // persist the times of death in localStorage in case of refresh
+        const toPersistInLocalStorage = modifiedMvps.reduce((merge, mvp) => {
+            return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath } : merge
+        }, {})
+        localStorage.setItem(
+            shareable ? localStorageMvpsShareableKey : localStorageMvpsKey,
+            JSON.stringify(toPersistInLocalStorage)
+        )
+
+        return modifiedMvps
     }
-) => {
-    const modifiedMvps = [
-        { ...beingModified.mvp, timeOfDeath: beingModified.updateTime },
-        ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
-    ]
 
-    // persist the times of death in localStorage in case of refresh
-    const toPersistInLocalStorage = modifiedMvps.reduce((merge, mvp) => {
-        return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath } : merge
-    }, {})
-    localStorage.setItem(localStorageMvpsKey, JSON.stringify(toPersistInLocalStorage))
-
-    return modifiedMvps
-}
-
-const TrackingContainer = (): ReactElement => {
+const TrackingContainer = ({ shareable = false }: { shareable?: boolean }): ReactElement => {
     const searchSubject = useRef(new Subject<string>()).current
     const searchInputRef = useRef<HTMLInputElement>(null)
 
     const [searchMvp, setSearchMvp] = useState('')
     const [undoState, setUndoState] = useState<[number, DateTime | null][]>([])
 
-    const [ragnarokMvps, dispatcher] = useReducer(reducer, computeTrackingInitialState())
+    const [ragnarokMvps, dispatcher] = useReducer(reducer(shareable), computeTrackingInitialState(shareable))
 
     const cleanSearchInput = useCallback(() => {
         setSearchMvp('')
@@ -71,8 +76,14 @@ const TrackingContainer = (): ReactElement => {
 
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
         const updateTime = DateTime.now().setZone(defaultTimeZoneName)
-        addActionToUndoState(mvp.id, mvp.timeOfDeath)
-        dispatcher({ mvp, updateTime })
+
+        if (mvp.timeOfDeath) {
+            addActionToUndoState(mvp.id, mvp.timeOfDeath)
+        }
+
+        const toUpdate = { mvp, updateTime }
+
+        dispatcher(toUpdate)
         cleanSearchInput()
     }
 
@@ -137,6 +148,7 @@ const TrackingContainer = (): ReactElement => {
     return (
         <TrackingContainerStyled>
             <Header>
+                {shareable && 'Shareable ALPHA'}
                 <SearchContainer>
                     <label htmlFor="searchMvp">Search for name or map</label>
                     <InputTombTime

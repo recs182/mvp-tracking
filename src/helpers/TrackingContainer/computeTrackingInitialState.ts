@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon'
 import mvpsFromStatic from '@/assets/mvps'
-import { localStorageMvpsKey } from '@/constants.ts'
+import { localStorageMvpsKey, localStorageMvpsShareableKey } from '@/constants.ts'
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
 
-type ComputeTrackingInitialState = () => RagnarokMvp[]
+type ComputeTrackingInitialState = (shareable: boolean) => RagnarokMvp[]
 
-export const computeTrackingInitialState: ComputeTrackingInitialState = () => {
-    const jsonState = localStorage.getItem(localStorageMvpsKey)
+export const computeTrackingInitialState: ComputeTrackingInitialState = (shareable) => {
+    const jsonState = localStorage.getItem(shareable ? localStorageMvpsShareableKey : localStorageMvpsKey)
     try {
         const parsedState = JSON.parse(jsonState as string)
         const retroState = Array.isArray(parsedState)
