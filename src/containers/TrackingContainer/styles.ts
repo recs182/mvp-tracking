@@ -39,6 +39,7 @@ export const TrackingHeaderCell = styled.th`
 
 export const TrackingCell = styled.td`
     padding: 0.5rem;
+    height: 80px;
     color: white;
 `
 
