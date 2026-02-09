@@ -85,7 +85,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
             $variationProgress={variations.alreadyStarted}
             $variationFinished={variations.endedMinutesAgo}
         >
-            {!variations.alreadyEnded && (
+            {!variations.alreadyEnded && mvpDoesNotHaveVariation && (
                 <RelativeDateContainer>
                     {mvpDoesNotHaveVariation ? (
                         <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Spawned' : 'Spawns'}</Fragment>
