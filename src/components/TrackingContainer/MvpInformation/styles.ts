@@ -5,8 +5,18 @@ export const MvpInformationStyled = styled.div`
     flex-direction: column;
     font-size: 12px;
 
-    & > div:first-child {
+    & > button:first-child {
+        padding: 0;
+        color: white;
         font-size: 14px;
         font-weight: bold;
+        text-align: left;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            color: #adadad;
+        }
     }
 `

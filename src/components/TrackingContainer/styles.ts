@@ -12,8 +12,9 @@ export const UpdateButton = styled.button`
         background-color 0.2s ease;
 
     &:hover {
-        color: var(--color-primary);
+        color: white;
         background-color: transparent;
+        border-color: white;
     }
 
     &:disabled {
@@ -36,6 +37,6 @@ export const InputTombTime = styled.input<{ $hasError?: boolean }>`
     ${(props) =>
         props.$hasError &&
         css`
-            border-color: var(--color-error);
+            border-color: var(--color-variation-progress);
         `}
 `

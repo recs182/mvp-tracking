@@ -5,6 +5,7 @@ export default [
         id: 1,
         name: 'Amon Ra',
         map: 'moc_pryd06',
+        mobId: '1511',
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1511.png',
         timeOfDeath: null,
@@ -13,6 +14,7 @@ export default [
         id: 2,
         name: 'Angeling',
         map: 'pay_fild04',
+        mobId: '1096',
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1096.png',
         timeOfDeath: null,
@@ -21,6 +23,7 @@ export default [
         id: 3,
         name: 'Angeling',
         map: 'xmas_dun01',
+        mobId: '1096',
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1096.png',
         timeOfDeath: null,
@@ -29,15 +32,8 @@ export default [
         id: 4,
         name: 'Angeling',
         map: 'yuno_fild03',
+        mobId: '1096',
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
-        sprite: '1096.png',
-        timeOfDeath: null,
-    },
-    {
-        id: 69,
-        name: 'Angeling',
-        map: 'mjolnir_04',
-        spawnTime: { minMinutes: 30, maxMinutes: 40 },
         sprite: '1096.png',
         timeOfDeath: null,
     },
@@ -45,6 +41,7 @@ export default [
         id: 5,
         name: 'Archangeling',
         map: 'yuno_fild05',
+        mobId: '1388',
         spawnTime: { minMinutes: 60, maxMinutes: 63 },
         sprite: '1388.png',
         timeOfDeath: null,
@@ -53,6 +50,7 @@ export default [
         id: 102,
         name: 'Assassin Cross Solo',
         map: 'lhz_dun03',
+        mobId: '1641',
         spawnTime: { minMinutes: 45, maxMinutes: 82 },
         sprite: '5481.gif',
         timeOfDeath: null,
@@ -61,6 +59,7 @@ export default [
         id: 103,
         name: 'Assassin Cross Summon',
         map: 'lhz_dun03',
+        mobId: '1641',
         spawnTime: { minMinutes: 100, maxMinutes: 130 },
         sprite: '5481.gif',
         timeOfDeath: null,
@@ -69,16 +68,20 @@ export default [
         id: 8,
         name: 'Atroce',
         map: 'ra_fild04',
+        modId: '1785',
         spawnTime: { minMinutes: 300, maxMinutes: 310 },
         sprite: '1785.png',
+        mobId: '1785',
         timeOfDeath: null,
     },
     {
         id: 7,
         name: 'Atroce',
         map: 'ra_fild03',
+        modId: '1785',
         spawnTime: { minMinutes: 180, maxMinutes: 190 },
         sprite: '1785.png',
+        mobId: '1785',
         timeOfDeath: null,
     },
     {
@@ -87,6 +90,7 @@ export default [
         map: 've_fild02',
         spawnTime: { minMinutes: 360, maxMinutes: 370 },
         sprite: '1785.png',
+        mobId: '1785',
         timeOfDeath: null,
     },
     {
@@ -95,6 +99,7 @@ export default [
         map: 'ra_fild02',
         spawnTime: { minMinutes: 240, maxMinutes: 250 },
         sprite: '1785.png',
+        mobId: '1785',
         timeOfDeath: null,
     },
     {
@@ -103,6 +108,7 @@ export default [
         map: 've_fild01',
         spawnTime: { minMinutes: 180, maxMinutes: 190 },
         sprite: '1785.png',
+        mobId: '1785',
         timeOfDeath: null,
     },
     {
@@ -111,6 +117,7 @@ export default [
         map: 'lou_dun03',
         spawnTime: { minMinutes: 117, maxMinutes: 127 },
         sprite: '1518.png',
+        mobId: '1518',
         timeOfDeath: null,
     },
     {
@@ -119,6 +126,7 @@ export default [
         map: 'prt_maze03',
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1039.png',
+        mobId: '1039',
         timeOfDeath: null,
     },
     {
@@ -127,6 +135,7 @@ export default [
         map: 'abbey03',
         spawnTime: { minMinutes: 720, maxMinutes: 730 },
         sprite: '1874.png',
+        mobId: '1874',
         timeOfDeath: null,
     },
     {
@@ -135,6 +144,7 @@ export default [
         map: 'lhz_dun03',
         spawnTime: { minMinutes: 100, maxMinutes: 130 },
         sprite: 'lhz_dun03.png',
+        mobId: '1648',
         timeOfDeath: null,
     },
     {
@@ -143,6 +153,7 @@ export default [
         map: 'gl_knt02',
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1268.png',
+        mobId: '1268',
         timeOfDeath: null,
     },
     {
@@ -151,6 +162,7 @@ export default [
         map: 'bra_dun02',
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '2068.png',
+        mobId: '2068',
         timeOfDeath: null,
     },
     {
@@ -160,13 +172,15 @@ export default [
         spawnTime: { minMinutes: 960, maxMinutes: 961 },
         sprite: '2475.png',
         timeOfDeath: null,
+        mobId: '2475',
     },
     {
         id: 16,
-        name: 'Dark Lord',
+        name: 'Dark Lord (DG)',
         map: 'gld_dun04',
         spawnTime: { minMinutes: 480, maxMinutes: 490 },
         sprite: '1272.png',
+        mobId: '1272',
         timeOfDeath: null,
     },
     {
@@ -175,6 +189,7 @@ export default [
         map: 'gl_chyard',
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1272.png',
+        mobId: '1272',
         timeOfDeath: null,
     },
     {
@@ -183,6 +198,7 @@ export default [
         map: 'abyss_03',
         spawnTime: { minMinutes: 180, maxMinutes: 190 },
         sprite: '1719.png',
+        mobId: '1719',
         timeOfDeath: null,
     },
     {
@@ -191,6 +207,7 @@ export default [
         map: 'yuno_fild03',
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1582.png',
+        mobId: '1582',
         timeOfDeath: null,
     },
     {
@@ -199,6 +216,7 @@ export default [
         map: 'pay_fild04',
         spawnTime: { minMinutes: 120, maxMinutes: 180 },
         sprite: '1582.png',
+        mobId: '1582',
         timeOfDeath: null,
     },
     {
@@ -207,6 +225,7 @@ export default [
         map: 'yuno_fild03',
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1582.png',
+        mobId: '1582',
         timeOfDeath: null,
     },
     {
@@ -216,14 +235,16 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1046.png',
         timeOfDeath: null,
+        mobId: '1046',
     },
     {
         id: 22,
-        name: 'Doppelganger',
+        name: 'Doppelganger (GD)',
         map: 'gld_dun02',
         spawnTime: { minMinutes: 480, maxMinutes: 490 },
         sprite: '1046.png',
         timeOfDeath: null,
+        mobId: '1046',
     },
     {
         id: 23,
@@ -232,6 +253,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1389.png',
         timeOfDeath: null,
+        mobId: '1389',
     },
     {
         id: 24,
@@ -240,6 +262,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1112.png',
         timeOfDeath: null,
+        mobId: '1112',
     },
     {
         id: 96,
@@ -248,6 +271,7 @@ export default [
         spawnTime: { minMinutes: 15, maxMinutes: 15 },
         sprite: '2018.png',
         timeOfDeath: null,
+        mobId: '2018',
     },
     {
         id: 966,
@@ -256,14 +280,16 @@ export default [
         spawnTime: { minMinutes: 15, maxMinutes: 15 },
         sprite: '2018.png',
         timeOfDeath: null,
+        mobId: '2018',
     },
     {
         id: 25,
-        name: 'Eddga',
+        name: 'Eddga (GD)',
         map: 'gld_dun01',
         spawnTime: { minMinutes: 480, maxMinutes: 490 },
         sprite: '1115.png',
         timeOfDeath: null,
+        mobId: '1115',
     },
     {
         id: 26,
@@ -272,6 +298,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1115.png',
         timeOfDeath: null,
+        mobId: '1115',
     },
     {
         id: 27,
@@ -280,6 +307,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1658.png',
         timeOfDeath: null,
+        mobId: '1658',
     },
     {
         id: 28,
@@ -288,6 +316,7 @@ export default [
         spawnTime: { minMinutes: 94, maxMinutes: 104 },
         sprite: '1418.png',
         timeOfDeath: null,
+        mobId: '1418',
     },
     {
         id: 29,
@@ -296,6 +325,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1871.png',
         timeOfDeath: null,
+        mobId: '1871',
     },
     {
         id: 30,
@@ -304,6 +334,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1252.png',
         timeOfDeath: null,
+        mobId: '1252',
     },
     {
         id: 73,
@@ -312,6 +343,7 @@ export default [
         spawnTime: { minMinutes: 113, maxMinutes: 170 },
         sprite: '1120.png',
         timeOfDeath: null,
+        mobId: '1120',
     },
     {
         id: 72,
@@ -320,14 +352,16 @@ export default [
         spawnTime: { minMinutes: 33, maxMinutes: 53 },
         sprite: '1120.png',
         timeOfDeath: null,
+        mobId: '1120',
     },
     {
         id: 31,
-        name: 'Ghostring',
+        name: 'Ghostring (GD)',
         map: 'gld_dun04',
         spawnTime: { minMinutes: 240, maxMinutes: 360 },
         sprite: '1120.png',
         timeOfDeath: null,
+        mobId: '1120',
     },
     {
         id: 32,
@@ -336,6 +370,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1120.png',
         timeOfDeath: null,
+        mobId: '1120',
     },
     {
         id: 34,
@@ -344,6 +379,7 @@ export default [
         spawnTime: { minMinutes: 300, maxMinutes: 310 },
         sprite: '1768.png',
         timeOfDeath: null,
+        mobId: '1768',
     },
     {
         id: 33,
@@ -352,6 +388,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1086.png',
         timeOfDeath: null,
+        mobId: '1086',
     },
     {
         id: 97,
@@ -360,14 +397,16 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1885.png',
         timeOfDeath: null,
+        mobId: '1885',
     },
     {
         id: 82,
-        name: 'Green Maiden',
+        name: 'Green Maiden (x5)',
         map: 'lou_dun03',
         spawnTime: { minMinutes: 50, maxMinutes: 80 },
         sprite: '1631.png',
         timeOfDeath: null,
+        mobId: '1631',
     },
     {
         id: 35,
@@ -376,6 +415,7 @@ export default [
         spawnTime: { minMinutes: 240, maxMinutes: 240 },
         sprite: '1990.png',
         timeOfDeath: null,
+        mobId: '1990',
     },
     {
         id: 36,
@@ -384,6 +424,7 @@ export default [
         spawnTime: { minMinutes: 660, maxMinutes: 670 },
         sprite: '1832.png',
         timeOfDeath: null,
+        mobId: '1832',
     },
     {
         id: 37,
@@ -392,6 +433,7 @@ export default [
         spawnTime: { minMinutes: 91, maxMinutes: 101 },
         sprite: '1492.png',
         timeOfDeath: null,
+        mobId: '1492',
     },
     {
         id: 38,
@@ -400,6 +442,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 180 },
         sprite: '1734.png',
         timeOfDeath: null,
+        modId: '1734',
     },
     {
         id: 98,
@@ -408,6 +451,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 150 },
         sprite: '2202.png',
         timeOfDeath: null,
+        mobId: '2202',
     },
     {
         id: 39,
@@ -416,14 +460,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 120 },
         sprite: '1779.png',
         timeOfDeath: null,
-    },
-    {
-        id: 89,
-        name: 'Ktullanux PS',
-        map: '',
-        spawnTime: { minMinutes: 240, maxMinutes: 245 },
-        sprite: '1779.png',
-        timeOfDeath: null,
+        mobId: '1779',
     },
     {
         id: 40,
@@ -432,6 +469,7 @@ export default [
         spawnTime: { minMinutes: 420, maxMinutes: 430 },
         sprite: '1688.png',
         timeOfDeath: null,
+        mobId: '1688',
     },
     {
         id: 41,
@@ -440,62 +478,70 @@ export default [
         spawnTime: { minMinutes: 133, maxMinutes: 133 },
         sprite: '21579.png',
         timeOfDeath: null,
+        mobId: '1373',
     },
     {
         id: 43,
-        name: 'Maya',
+        name: 'Maya (GD)',
         map: 'gld_dun03',
         spawnTime: { minMinutes: 480, maxMinutes: 490 },
-        sprite: '1289.png',
+        sprite: '1147.png',
         timeOfDeath: null,
+        mobId: '1147',
     },
     {
         id: 42,
         name: 'Maya',
         map: 'anthell02',
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
-        sprite: '1289.png',
+        sprite: '1147.png',
         timeOfDeath: null,
+        mobId: '1147',
     },
     {
         id: 44,
         name: 'Maya Purple',
         map: 'anthell01',
         spawnTime: { minMinutes: 120, maxMinutes: 180 },
-        sprite: '1147.png',
+        sprite: '1289.png',
         timeOfDeath: null,
+        mobId: '1289',
     },
     {
         id: 45,
-        name: 'Maya Purple',
+        name: 'Maya Purple 1 (GD)',
         map: 'gld_dun03',
         spawnTime: { minMinutes: 20, maxMinutes: 30 },
-        sprite: '1147.png',
+        sprite: '1289.png',
         timeOfDeath: null,
+        mobId: '1289',
     },
     {
         id: 91,
-        name: 'Maya Purple01 GD',
+        name: 'Maya Purple 2 (GD)',
         map: 'gld_dun03',
         spawnTime: { minMinutes: 20, maxMinutes: 30 },
-        sprite: '1147.png',
+        sprite: '1289.png',
         timeOfDeath: null,
+        mobId: '1289',
     },
     {
         id: 92,
-        name: 'Maya Purple02 GD',
+        name: 'Maya Purple 3 (GD)',
         map: 'gld_dun03',
         spawnTime: { minMinutes: 20, maxMinutes: 30 },
-        sprite: '1147.png',
+        sprite: '1289.png',
         timeOfDeath: null,
+        mobId: '1289',
     },
     {
         id: 93,
-        name: 'Maya Purple03 GD',
+        name: 'Maya Purple 4 (GD)',
         map: 'gld_dun03',
         spawnTime: { minMinutes: 20, maxMinutes: 30 },
-        sprite: '1147.png',
+        sprite: '1289.png',
         timeOfDeath: null,
+        mobId: '1289',
     },
     {
         id: 46,
@@ -504,6 +550,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1059.png',
         timeOfDeath: null,
+        mobId: '1059',
     },
     {
         id: 47,
@@ -512,6 +559,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1150.png',
         timeOfDeath: null,
+        mobId: '1150',
     },
     {
         id: 86,
@@ -520,6 +568,7 @@ export default [
         spawnTime: { minMinutes: 30, maxMinutes: 35 },
         sprite: '1262.png',
         timeOfDeath: null,
+        mobId: '1262',
     },
     {
         id: 49,
@@ -528,6 +577,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1087.png',
         timeOfDeath: null,
+        mobId: '1087',
     },
     {
         id: 48,
@@ -536,6 +586,7 @@ export default [
         spawnTime: { minMinutes: 1440, maxMinutes: 1450 },
         sprite: '1087.png',
         timeOfDeath: null,
+        mobId: '1087',
     },
     {
         id: 50,
@@ -544,6 +595,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1190.png',
         timeOfDeath: null,
+        mobId: '1190',
     },
     {
         id: 51,
@@ -552,6 +604,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1038.png',
         timeOfDeath: null,
+        mobId: '1038',
     },
     {
         id: 52,
@@ -560,6 +613,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1157.png',
         timeOfDeath: null,
+        mobId: '1157',
     },
     {
         id: 53,
@@ -568,6 +622,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1159.png',
         timeOfDeath: null,
+        mobId: '1159',
     },
     {
         id: 54,
@@ -576,6 +631,7 @@ export default [
         spawnTime: { minMinutes: 125, maxMinutes: 135 },
         sprite: '1623.png',
         timeOfDeath: null,
+        mobId: '1623',
     },
     {
         id: 55,
@@ -584,6 +640,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1251.png',
         timeOfDeath: null,
+        mobId: '1251',
     },
     {
         id: 56,
@@ -592,6 +649,7 @@ export default [
         spawnTime: { minMinutes: 300, maxMinutes: 310 },
         sprite: '3430.png',
         timeOfDeath: null,
+        mobId: '1583',
     },
     {
         id: 57,
@@ -600,6 +658,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 60 },
         sprite: '1991.png',
         timeOfDeath: null,
+        mobId: '1991',
     },
     {
         id: 58,
@@ -608,6 +667,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 120 },
         sprite: '1708.png',
         timeOfDeath: null,
+        mobId: '1708',
     },
     {
         id: 100,
@@ -616,6 +676,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1089.png',
         timeOfDeath: null,
+        mobId: '1089',
     },
     {
         id: 99,
@@ -624,6 +685,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 90 },
         sprite: '1089.png',
         timeOfDeath: null,
+        mobId: '1089',
     },
     {
         id: 59,
@@ -632,6 +694,7 @@ export default [
         spawnTime: { minMinutes: 60, maxMinutes: 70 },
         sprite: '1312.png',
         timeOfDeath: null,
+        mobId: '1312',
     },
     {
         id: 60,
@@ -640,6 +703,7 @@ export default [
         spawnTime: { minMinutes: 30, maxMinutes: 30 },
         sprite: '2037.png',
         timeOfDeath: null,
+        mobId: '1765',
     },
     {
         id: 61,
@@ -648,6 +712,7 @@ export default [
         spawnTime: { minMinutes: 30, maxMinutes: 30 },
         sprite: '2037.png',
         timeOfDeath: null,
+        mobId: '1765',
     },
     {
         id: 62,
@@ -656,6 +721,7 @@ export default [
         spawnTime: { minMinutes: 90, maxMinutes: 90 },
         sprite: '2037.png',
         timeOfDeath: null,
+        mobId: '1765',
     },
     {
         id: 63,
@@ -664,6 +730,7 @@ export default [
         spawnTime: { minMinutes: 480, maxMinutes: 490 },
         sprite: '1751.png',
         timeOfDeath: null,
+        mobId: '1751',
     },
     {
         id: 64,
@@ -672,6 +739,7 @@ export default [
         spawnTime: { minMinutes: 120, maxMinutes: 130 },
         sprite: '1685.png',
         timeOfDeath: null,
+        mobId: '1685',
     },
     {
         id: 65,
@@ -680,6 +748,7 @@ export default [
         spawnTime: { minMinutes: 720, maxMinutes: 780 },
         sprite: '1917.png',
         timeOfDeath: null,
+        mobId: '1917',
     },
     {
         id: 12591,
@@ -687,6 +756,7 @@ export default [
         map: 'ra_fild01',
         spawnTime: { minMinutes: 60, maxMinutes: 60 },
         sprite: '1259.png',
+        mobId: '1259',
     },
     {
         id: 12592,
@@ -694,6 +764,7 @@ export default [
         map: 'ra_fild01',
         spawnTime: { minMinutes: 60, maxMinutes: 60 },
         sprite: '1259.png',
+        mobId: '1259',
     },
     {
         id: 12593,
@@ -701,5 +772,22 @@ export default [
         map: 'ra_fild01',
         spawnTime: { minMinutes: 60, maxMinutes: 60 },
         sprite: '1259.png',
+        mobId: '1259',
+    },
+    {
+        id: 12594,
+        name: 'Gryphon',
+        map: 'cmd_fild08',
+        spawnTime: { minMinutes: 60, maxMinutes: 60 },
+        sprite: '1259.png',
+        mobId: '1259',
+    },
+    {
+        id: 12595,
+        name: 'Gryphon',
+        map: 'um_fild03',
+        spawnTime: { minMinutes: 60, maxMinutes: 60 },
+        sprite: '1259.png',
+        mobId: '1259',
     },
 ] as RagnarokMvp[]

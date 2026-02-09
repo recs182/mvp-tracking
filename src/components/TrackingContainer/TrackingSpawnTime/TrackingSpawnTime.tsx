@@ -14,38 +14,52 @@ interface TrackingSpawnTimeProps {
 type MemoReturn = {
     maximumDifferenceInMinutes?: number
     minimumDifferenceInMinutes?: number
-    variationAboutToStart: boolean
-    variationAlreadyStarted: boolean
+    variations: {
+        aboutToStart: boolean
+        alreadyEnded: boolean
+        alreadyStarted: boolean
+        endedMinutesAgo: boolean
+    }
 }
 
 export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactElement => {
     const [autoUpdate, setAutoUpdate] = useState<number>(0)
 
-    const { variationAboutToStart, variationAlreadyStarted, maximumDifferenceInMinutes, minimumDifferenceInMinutes } =
-        useMemo<MemoReturn>(() => {
-            const dateUTC = DateTime.now().setZone(defaultTimeZoneName)
+    const { maximumDifferenceInMinutes, minimumDifferenceInMinutes, variations } = useMemo<MemoReturn>(() => {
+        const dateUTC = DateTime.now().setZone(defaultTimeZoneName)
 
-            if (!mvp.timeOfDeath) {
-                return {
-                    variationAboutToStart: false,
-                    variationAlreadyStarted: false,
-                    maximumSpawnTime: dateUTC,
-                    minimalSpawnTime: dateUTC,
-                }
-            }
-
-            const { maximumDifferenceInMinutes, minimumDifferenceInMinutes } = computeMvpDifferenceTimers(mvp)
-
-            const variationAboutToStart = Number(minimumDifferenceInMinutes) >= -5
-            const variationAlreadyStarted = Number(minimumDifferenceInMinutes) >= 0
-
+        if (!mvp.timeOfDeath) {
             return {
-                variationAboutToStart,
-                variationAlreadyStarted,
-                maximumDifferenceInMinutes,
-                minimumDifferenceInMinutes,
+                maximumSpawnTime: dateUTC,
+                minimalSpawnTime: dateUTC,
+                variations: {
+                    aboutToStart: false,
+                    alreadyEnded: false,
+                    alreadyStarted: false,
+                    endedMinutesAgo: false,
+                },
             }
-        }, [mvp, autoUpdate])
+        }
+
+        const { maximumDifferenceInMinutes, minimumDifferenceInMinutes } = computeMvpDifferenceTimers(mvp)
+
+        const variationAlreadyEnded = Number(maximumDifferenceInMinutes) >= 0
+        const endedMinutesAgo = Number(maximumDifferenceInMinutes) >= 15
+
+        const variationAboutToStart = Number(minimumDifferenceInMinutes) >= -5
+        const variationAlreadyStarted = Number(minimumDifferenceInMinutes) >= 0
+
+        return {
+            maximumDifferenceInMinutes,
+            minimumDifferenceInMinutes,
+            variations: {
+                aboutToStart: variationAboutToStart,
+                alreadyEnded: variationAlreadyEnded,
+                alreadyStarted: variationAlreadyStarted,
+                endedMinutesAgo,
+            },
+        }
+    }, [mvp, autoUpdate])
 
     useEffect(() => {
         const intervalId = setInterval(() => setAutoUpdate((current) => current + 1), 5000)
@@ -53,11 +67,11 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     }, [])
 
     if (!mvp.timeOfDeath) {
-        return <TimerContainer $alreadyInVariation={false} $variation={false} />
+        return <TimerContainer $alreadyInVariation={false} $variation={false} $variationFinished={false} />
     }
 
     const mvpDoesNotHaveVariation = mvp.spawnTime.minMinutes === mvp.spawnTime.maxMinutes
-    const variationToStartOrAlreadyStarted = variationAboutToStart || variationAlreadyStarted
+    const variationToStartOrAlreadyStarted = variations.aboutToStart || variations.alreadyStarted
 
     const minimumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: minimumDifferenceInMinutes })
     const maximumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: maximumDifferenceInMinutes })
@@ -66,20 +80,26 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     const localMaximumDate = DateTime.now().minus({ minutes: maximumDifferenceInMinutes })
 
     return (
-        <TimerContainer $alreadyInVariation={variationAlreadyStarted} $variation={variationAboutToStart}>
-            <RelativeDateContainer>
-                {mvpDoesNotHaveVariation ? (
-                    <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Spawned' : 'Spawns'}</Fragment>
-                ) : (
-                    <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Started' : 'Starts'}</Fragment>
-                )}
+        <TimerContainer
+            $alreadyInVariation={variations.aboutToStart}
+            $variation={variations.aboutToStart}
+            $variationFinished={variations.endedMinutesAgo}
+        >
+            {!variations.alreadyEnded && (
+                <RelativeDateContainer>
+                    {mvpDoesNotHaveVariation ? (
+                        <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Spawned' : 'Spawns'}</Fragment>
+                    ) : (
+                        <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Started' : 'Starts'}</Fragment>
+                    )}
 
-                <strong
-                    title={`Server: ${minimumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMinimumDate.toLocaleString(DateTime.DATETIME_MED)}`}
-                >
-                    {minimumDate.toRelative()}
-                </strong>
-            </RelativeDateContainer>
+                    <strong
+                        title={`Server: ${minimumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMinimumDate.toLocaleString(DateTime.DATETIME_MED)}`}
+                    >
+                        {minimumDate.toRelative()}
+                    </strong>
+                </RelativeDateContainer>
+            )}
 
             {!mvpDoesNotHaveVariation && variationToStartOrAlreadyStarted && (
                 <RelativeDateContainer>

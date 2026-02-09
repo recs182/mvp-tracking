@@ -74,8 +74,16 @@ export const ActionButton = styled.button`
     cursor: pointer;
 `
 
+export const MvpSpriteContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+`
+
 export const MvpSprite = styled.img`
-    width: 32px;
+    width: auto;
+    max-height: 32px;
 `
 
 export const Header = styled.header`

@@ -12,6 +12,7 @@ import {
     Header,
     HeaderDisplayDates,
     MvpSprite,
+    MvpSpriteContainer,
     SearchContainer,
     TimeOfDeathContainer,
     TrackingBody,
@@ -71,7 +72,11 @@ const TrackingContainer = (): ReactElement => {
 
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
         const updateTime = DateTime.now().setZone(defaultTimeZoneName)
-        addActionToUndoState(mvp.id, mvp.timeOfDeath)
+
+        if (mvp.timeOfDeath || !updateTime) {
+            addActionToUndoState(mvp.id, mvp.timeOfDeath)
+        }
+
         dispatcher({ mvp, updateTime })
         cleanSearchInput()
     }
@@ -165,7 +170,7 @@ const TrackingContainer = (): ReactElement => {
                     </TrackingHeader>
                     <TrackingBody>
                         {searchFilteredMvps.sort(sortTrackingMvpList).map((mvp) => {
-                            const { id, name, map, spawnTime, sprite, timeOfDeath } = mvp
+                            const { id, map, mobId, name, spawnTime, sprite, timeOfDeath } = mvp
 
                             const spriteToUse = sprite ?? 'fallback.png'
                             const hasActionToUndo = Array.isArray(undoState.find((tuple) => tuple[0] === mvp.id))
@@ -173,10 +178,12 @@ const TrackingContainer = (): ReactElement => {
                             return (
                                 <TrackingRow key={id}>
                                     <TrackingCell style={{ paddingRight: 0, width: 32 }}>
-                                        <MvpSprite src={`./mvps/${spriteToUse}`} alt={`${name} sprite`} />
+                                        <MvpSpriteContainer>
+                                            <MvpSprite src={`./mvps/${spriteToUse}`} alt={`${name} sprite`} />
+                                        </MvpSpriteContainer>
                                     </TrackingCell>
                                     <TrackingCell>
-                                        <MvpInformation map={map} name={name} spawnTime={spawnTime} />
+                                        <MvpInformation map={map} mobId={mobId} name={name} spawnTime={spawnTime} />
                                     </TrackingCell>
                                     <TrackingCell>
                                         <TimeOfDeathContainer>
@@ -198,7 +205,7 @@ const TrackingContainer = (): ReactElement => {
                                     </TrackingCell>
                                     <TrackingCell>
                                         <UpdateContainer>
-                                            <UpdateButton onClick={realTimeUpdateFactory(mvp)}>Update</UpdateButton>
+                                            <UpdateButton onClick={realTimeUpdateFactory(mvp)}>Track</UpdateButton>
                                             <div style={{ padding: '0.25rem' }}>or</div>
                                             <UpdateFromTombForm updateFromTomb={fromTombUpdateFactory(mvp)} />
                                         </UpdateContainer>
