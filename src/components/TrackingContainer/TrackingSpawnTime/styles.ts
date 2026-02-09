@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components'
 
 export const TimerContainer = styled.div<{
-    $alreadyInVariation: boolean
-    $variation: boolean
+    $variationProgress: boolean
+    $variationStart: boolean
     $variationFinished: boolean
 }>`
     width: 180px;
@@ -14,13 +14,13 @@ export const TimerContainer = styled.div<{
             `
         }
 
-        if (props.$alreadyInVariation) {
+        if (props.$variationProgress) {
             return css`
                 color: var(--color-variation-progress);
             `
         }
 
-        if (props.$variation) {
+        if (props.$variationStart) {
             return css`
                 color: var(--color-variation-start);
             `

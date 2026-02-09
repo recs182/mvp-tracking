@@ -67,7 +67,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     }, [])
 
     if (!mvp.timeOfDeath) {
-        return <TimerContainer $alreadyInVariation={false} $variation={false} $variationFinished={false} />
+        return <TimerContainer $variationProgress={false} $variationStart={false} $variationFinished={false} />
     }
 
     const mvpDoesNotHaveVariation = mvp.spawnTime.minMinutes === mvp.spawnTime.maxMinutes
@@ -81,8 +81,8 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
 
     return (
         <TimerContainer
-            $alreadyInVariation={variations.aboutToStart}
-            $variation={variations.aboutToStart}
+            $variationStart={variations.aboutToStart}
+            $variationProgress={variations.alreadyStarted}
             $variationFinished={variations.endedMinutesAgo}
         >
             {!variations.alreadyEnded && (
