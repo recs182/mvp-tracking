@@ -10,7 +10,7 @@ export const TrackingAsideStyled = styled.aside<{ $open: boolean }>`
     border-right: 1px solid var(--color-odd-row);
     transform: translateX(-100%);
     transition: transform 125ms ease;
-    z-index: 3;
+    z-index: 4;
 
     @media (min-width: 770px) {
         width: 350px;
@@ -31,6 +31,10 @@ export const AsideContentContainer = styled.div`
 
 export const AsideContentHeader = styled.div`
     padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     color: white;
     font-weight: bold;
 `

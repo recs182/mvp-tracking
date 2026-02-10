@@ -2,7 +2,7 @@ import { Fragment, type ReactElement, useCallback, useEffect, useReducer, useRef
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
 // app
-import { TrackingButton, TrackingInput } from '@/components/TrackingContainer/styles'
+import { TrackingButton, TrackingInput, TrackingToggleMenu } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingAside, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
 import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
@@ -17,11 +17,11 @@ import {
     MvpSpriteContainer,
     SearchContainer,
     TimeOfDeathContainer,
-    ToggleMenu,
     TrackerGridCell,
     TrackerGridContainer,
     TrackerGridRow,
     TrackingContainerStyled,
+    TrackingOverlay,
     UpdateContainer,
 } from './styles'
 import { type DispatcherStateModifier, type RagnarokMvp, type TrackingChange, TrackingChangeAction } from './types'
@@ -188,6 +188,8 @@ const TrackingContainer = (): ReactElement => {
 
     return (
         <TrackingContainerStyled>
+            <TrackingOverlay $show={openAside} onClick={toggleAsideOpen} title="Toggle menu" />
+
             <Header>
                 <HeaderActionsContainer>
                     <SearchContainer>
@@ -201,9 +203,9 @@ const TrackingContainer = (): ReactElement => {
                             type="text"
                         />
                     </SearchContainer>
-                    <ToggleMenu onClick={toggleAsideOpen} title="Menu">
+                    <TrackingToggleMenu onClick={toggleAsideOpen} style={{ marginTop: '12px' }} title="Menu">
                         &#9776;
-                    </ToggleMenu>
+                    </TrackingToggleMenu>
                 </HeaderActionsContainer>
                 <HeaderDisplayDates>
                     <div>Server time: {serverTime.toFormat('HH:mm')}</div>
@@ -215,6 +217,7 @@ const TrackingContainer = (): ReactElement => {
                 changes={changesState}
                 fullTrackerReset={resetChangesState}
                 open={openAside}
+                toggleOpen={toggleAsideOpen}
                 undoChangeFactory={undoChangeAndAddToHistory}
             />
 

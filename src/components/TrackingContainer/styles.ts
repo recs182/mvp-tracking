@@ -40,3 +40,16 @@ export const TrackingInput = styled.input<{ $hasError?: boolean }>`
             border-color: var(--color-variation-progress);
         `}
 `
+
+export const TrackingToggleMenu = styled.button`
+    padding: 0;
+    color: white;
+    font-size: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--color-variation-ended);
+    }
+`

@@ -2,7 +2,7 @@ import { type ReactElement, useCallback } from 'react'
 import { DateTime } from 'luxon'
 // app
 import { type TrackingChange } from '@/containers/TrackingContainer/types'
-import { TrackingButton } from '@/components/TrackingContainer'
+import { TrackingButton, TrackingToggleMenu } from '@/components/TrackingContainer'
 // self
 import {
     AsideContentContainer,
@@ -20,6 +20,7 @@ export interface TrackingAsideProps {
     changes: TrackingChange[]
     fullTrackerReset: () => void
     open: boolean
+    toggleOpen: () => void
     undoChangeFactory: (change: TrackingChange) => () => void
 }
 
@@ -27,6 +28,7 @@ export const TrackingAside = ({
     changes,
     fullTrackerReset,
     open,
+    toggleOpen,
     undoChangeFactory,
 }: TrackingAsideProps): ReactElement => {
     const fullTrackerResetConfirmation = useCallback(() => {
@@ -38,7 +40,12 @@ export const TrackingAside = ({
     return (
         <TrackingAsideStyled $open={open}>
             <AsideContentContainer>
-                <AsideContentHeader>Changes</AsideContentHeader>
+                <AsideContentHeader>
+                    Changes
+                    <TrackingToggleMenu onClick={toggleOpen} title="Menu">
+                        &#9776;
+                    </TrackingToggleMenu>
+                </AsideContentHeader>
                 <AsideContentOverflow>
                     {changes.map((change, index) => {
                         const actionNumber = String(++index).padStart(2, '0')
