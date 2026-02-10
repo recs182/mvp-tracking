@@ -5,8 +5,6 @@ export const TimerContainer = styled.div<{
     $variationStart: boolean
     $variationFinished: boolean
 }>`
-    width: 180px;
-
     ${(props) => {
         if (props.$variationFinished) {
             return css`
@@ -31,5 +29,10 @@ export const TimerContainer = styled.div<{
 export const RelativeDateContainer = styled.div`
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4rem;
+
+    @media (min-width: 770px) {
+        justify-content: flex-start;
+    }
 `

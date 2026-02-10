@@ -11,18 +11,15 @@ import {
     ActionButton,
     Header,
     HeaderDisplayDates,
+    MvpInformationContainer,
     MvpSprite,
     MvpSpriteContainer,
     SearchContainer,
     TimeOfDeathContainer,
-    TrackingBody,
-    TrackingCell,
+    TrackerGridCell,
+    TrackerGridContainer,
+    TrackerGridRow,
     TrackingContainerStyled,
-    TrackingHeader,
-    TrackingHeaderCell,
-    TrackingRow,
-    TrackingTable,
-    TrackingTableResponsive,
     UpdateContainer,
 } from './styles'
 import type { RagnarokMvp } from './types'
@@ -149,7 +146,7 @@ const TrackingContainer = (): ReactElement => {
                         onChange={(changeEvent) => searchSubject.next(changeEvent.target.value)}
                         placeholder="Dark Lord / pay"
                         ref={searchInputRef}
-                        style={{ width: '340px' }}
+                        style={{ width: 'auto' }}
                         type="text"
                     />
                 </SearchContainer>
@@ -159,74 +156,66 @@ const TrackingContainer = (): ReactElement => {
                 </HeaderDisplayDates>
             </Header>
 
-            <TrackingTableResponsive>
-                <TrackingTable>
-                    <TrackingHeader>
-                        <TrackingRow>
-                            <TrackingHeaderCell colSpan={2}>🐉 Mvp</TrackingHeaderCell>
-                            <TrackingHeaderCell>⏳ Timers</TrackingHeaderCell>
-                            <TrackingHeaderCell>🔃 Auto or manually from tomb</TrackingHeaderCell>
-                        </TrackingRow>
-                    </TrackingHeader>
-                    <TrackingBody>
-                        {searchFilteredMvps.sort(sortTrackingMvpList).map((mvp) => {
-                            const { id, map, mobId, name, spawnTime, sprite, timeOfDeath } = mvp
+            <TrackerGridContainer>
+                <TrackerGridRow $isHeader={true}>
+                    <TrackerGridCell>🐉 Mvp information</TrackerGridCell>
+                    <TrackerGridCell>⏳ Timers</TrackerGridCell>
+                    <TrackerGridCell>🔃 Update timers</TrackerGridCell>
+                </TrackerGridRow>
 
-                            const spriteToUse = sprite ?? 'fallback.png'
-                            const hasActionToUndo = Array.isArray(undoState.find((tuple) => tuple[0] === mvp.id))
+                {searchFilteredMvps.sort(sortTrackingMvpList).map((mvp) => {
+                    const { id, map, mobId, name, spawnTime, sprite, timeOfDeath } = mvp
 
-                            return (
-                                <TrackingRow key={id}>
-                                    <TrackingCell style={{ paddingRight: 0, width: 32 }}>
-                                        <MvpSpriteContainer>
-                                            <MvpSprite src={`./mvps/${spriteToUse}`} alt={`${name} sprite`} />
-                                        </MvpSpriteContainer>
-                                    </TrackingCell>
-                                    <TrackingCell>
-                                        <MvpInformation map={map} mobId={mobId} name={name} spawnTime={spawnTime} />
-                                    </TrackingCell>
-                                    <TrackingCell>
-                                        <TimeOfDeathContainer>
-                                            {timeOfDeath && (
-                                                <Fragment>
-                                                    💀 {timeOfDeath?.toFormat('HH:mm')}
-                                                    <ActionButton onClick={resetTimeFromMvpFactory(mvp)} title="Remove">
-                                                        ❌
-                                                    </ActionButton>
-                                                </Fragment>
-                                            )}
-                                            {hasActionToUndo && (
-                                                <ActionButton onClick={undoActionFactory(mvp)} title="Undo">
-                                                    ◀️
-                                                </ActionButton>
-                                            )}
-                                        </TimeOfDeathContainer>
-                                        <TrackingSpawnTime mvp={mvp} />
-                                    </TrackingCell>
-                                    <TrackingCell>
-                                        <UpdateContainer>
-                                            <UpdateButton onClick={realTimeUpdateFactory(mvp)}>Track</UpdateButton>
-                                            <div style={{ padding: '0.25rem' }}>or</div>
-                                            <UpdateFromTombForm updateFromTomb={fromTombUpdateFactory(mvp)} />
-                                        </UpdateContainer>
-                                    </TrackingCell>
-                                </TrackingRow>
-                            )
-                        })}
+                    const spriteToUse = sprite ?? 'fallback.png'
+                    const hasActionToUndo = Array.isArray(undoState.find((tuple) => tuple[0] === mvp.id))
 
-                        {!searchFilteredMvps.length && (
-                            <TrackingRow>
-                                <TrackingCell
-                                    style={{ width: 726, textAlign: 'center', padding: '5rem 0.5rem' }}
-                                    colSpan={4}
-                                >
-                                    Nothing found when searching for <strong>{searchMvp}</strong> 😞
-                                </TrackingCell>
-                            </TrackingRow>
-                        )}
-                    </TrackingBody>
-                </TrackingTable>
-            </TrackingTableResponsive>
+                    return (
+                        <TrackerGridRow key={id}>
+                            <TrackerGridCell>
+                                <MvpInformationContainer>
+                                    <MvpSpriteContainer>
+                                        <MvpSprite src={`./mvps/${spriteToUse}`} alt={`${name} sprite`} />
+                                    </MvpSpriteContainer>
+                                    <MvpInformation map={map} mobId={mobId} name={name} spawnTime={spawnTime} />
+                                </MvpInformationContainer>
+                            </TrackerGridCell>
+                            <TrackerGridCell>
+                                <TimeOfDeathContainer>
+                                    {timeOfDeath && (
+                                        <Fragment>
+                                            💀 {timeOfDeath?.toFormat('HH:mm')}
+                                            <ActionButton onClick={resetTimeFromMvpFactory(mvp)} title="Remove">
+                                                ❌
+                                            </ActionButton>
+                                        </Fragment>
+                                    )}
+                                    {hasActionToUndo && (
+                                        <ActionButton onClick={undoActionFactory(mvp)} title="Undo">
+                                            ◀️
+                                        </ActionButton>
+                                    )}
+                                </TimeOfDeathContainer>
+                                <TrackingSpawnTime mvp={mvp} />
+                            </TrackerGridCell>
+                            <TrackerGridCell>
+                                <UpdateContainer>
+                                    <UpdateButton onClick={realTimeUpdateFactory(mvp)}>Track</UpdateButton>
+                                    <div style={{ padding: '0.25rem' }}>or</div>
+                                    <UpdateFromTombForm updateFromTomb={fromTombUpdateFactory(mvp)} />
+                                </UpdateContainer>
+                            </TrackerGridCell>
+                        </TrackerGridRow>
+                    )
+                })}
+
+                {!searchFilteredMvps.length && (
+                    <TrackerGridRow style={{ gridTemplateColumns: '1fr' }}>
+                        <TrackerGridCell>
+                            Nothing found when searching for <strong>{searchMvp}</strong> 😞
+                        </TrackerGridCell>
+                    </TrackerGridRow>
+                )}
+            </TrackerGridContainer>
         </TrackingContainerStyled>
     )
 }

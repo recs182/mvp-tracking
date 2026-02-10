@@ -1,5 +1,5 @@
 import { Fragment, memo, type ReactElement, useEffect, useMemo, useState } from 'react'
-import { DateTime } from 'luxon'
+import { DateTime, Duration } from 'luxon'
 // app
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
 import { computeMvpDifferenceTimers } from '@/helpers/TrackingContainer'
@@ -20,6 +20,29 @@ type MemoReturn = {
         alreadyStarted: boolean
         endedMinutesAgo: boolean
     }
+}
+
+const toRelativeAccurate = (target: DateTime): string => {
+    const differenceInMilliseconds = target.toMillis() - DateTime.now().setZone(defaultTimeZoneName).toMillis()
+    const duration = Duration.fromMillis(Math.abs(differenceInMilliseconds))
+        .shiftTo('hours', 'minutes')
+        .mapUnits((unit) => Math.floor(unit))
+
+    const parts = (['hours', 'minutes'] as const)
+        .filter((unit) => duration.get(unit) > 0)
+        .reduce((merge, unit) => merge + duration.get(unit), 0)
+
+    if (parts === 0) return 'now'
+
+    const readableDuration = duration.toHuman({
+        listStyle: 'narrow',
+        unitDisplay: 'narrow',
+        maximumFractionDigits: 0,
+        showZeros: false,
+    })
+
+    const isFuture = differenceInMilliseconds > 0
+    return isFuture ? `in ${readableDuration}` : `${readableDuration} ago`
 }
 
 export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactElement => {
@@ -62,12 +85,16 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     }, [mvp, autoUpdate])
 
     useEffect(() => {
-        const intervalId = setInterval(() => setAutoUpdate((current) => current + 1), 5000)
+        const intervalId = setInterval(() => setAutoUpdate((current) => current + 1), 30000)
         return () => clearInterval(intervalId)
     }, [])
 
     if (!mvp.timeOfDeath) {
-        return <TimerContainer $variationProgress={false} $variationStart={false} $variationFinished={false} />
+        return (
+            <TimerContainer $variationProgress={false} $variationStart={false} $variationFinished={true}>
+                Not tracked
+            </TimerContainer>
+        )
     }
 
     const mvpDoesNotHaveVariation = mvp.spawnTime.minMinutes === mvp.spawnTime.maxMinutes
@@ -96,7 +123,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
                     <strong
                         title={`Server: ${minimumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMinimumDate.toLocaleString(DateTime.DATETIME_MED)}`}
                     >
-                        {minimumDate.toRelative()}
+                        {toRelativeAccurate(minimumDate)}
                     </strong>
                 </RelativeDateContainer>
             )}
@@ -107,10 +134,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
                     <strong
                         title={`Server: ${maximumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMaximumDate.toLocaleString(DateTime.DATETIME_MED)}`}
                     >
-                        {DateTime.now()
-                            .setZone(defaultTimeZoneName)
-                            .minus({ minutes: maximumDifferenceInMinutes })
-                            .toRelative()}
+                        {toRelativeAccurate(maximumDate)}
                     </strong>
                 </RelativeDateContainer>
             )}

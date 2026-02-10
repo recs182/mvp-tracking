@@ -34,7 +34,9 @@ export const MvpInformation = memo<MvpInformationProps>(({ map, mobId, name, spa
 
     return (
         <MvpInformationStyled>
-            <button onClick={copyMobIdFactory(mobId)}>{name}</button>
+            <button onClick={copyMobIdFactory(mobId)} title={`Copy @mi ${mobId} and paste in-game chat`}>
+                {name}
+            </button>
             <div>
                 Map: <strong>{map}</strong>
             </div>
