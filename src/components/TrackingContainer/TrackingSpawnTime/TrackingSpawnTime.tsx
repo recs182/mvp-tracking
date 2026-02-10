@@ -103,9 +103,6 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     const minimumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: minimumDifferenceInMinutes })
     const maximumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: maximumDifferenceInMinutes })
 
-    const localMinimumDate = DateTime.now().minus({ minutes: minimumDifferenceInMinutes })
-    const localMaximumDate = DateTime.now().minus({ minutes: maximumDifferenceInMinutes })
-
     return (
         <TimerContainer
             $variationStart={variations.aboutToStart}
@@ -120,22 +117,14 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
                         <Fragment>{Number(minimumDifferenceInMinutes) >= 0 ? 'Started' : 'Starts'}</Fragment>
                     )}
 
-                    <strong
-                        title={`Server: ${minimumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMinimumDate.toLocaleString(DateTime.DATETIME_MED)}`}
-                    >
-                        {toRelativeAccurate(minimumDate)}
-                    </strong>
+                    <strong>{toRelativeAccurate(minimumDate)}</strong>
                 </RelativeDateContainer>
             )}
 
             {!mvpDoesNotHaveVariation && variationToStartOrAlreadyStarted && (
                 <RelativeDateContainer>
                     {Number(maximumDifferenceInMinutes) >= 0 ? 'Finished' : 'Finishes'}
-                    <strong
-                        title={`Server: ${maximumDate.toLocaleString(DateTime.DATETIME_MED)} / Your: ${localMaximumDate.toLocaleString(DateTime.DATETIME_MED)}`}
-                    >
-                        {toRelativeAccurate(maximumDate)}
-                    </strong>
+                    <strong>{toRelativeAccurate(maximumDate)}</strong>
                 </RelativeDateContainer>
             )}
         </TimerContainer>

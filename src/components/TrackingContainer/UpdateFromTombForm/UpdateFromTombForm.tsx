@@ -4,7 +4,7 @@ import { useMaskito } from '@maskito/react'
 import { maskitoTimeOptionsGenerator } from '@maskito/kit'
 import { DateTime } from 'luxon'
 // app
-import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
+import { TrackingButton, TrackingInput } from '@/components/TrackingContainer/styles'
 import { defaultTimeZoneName } from '@/constants'
 // self
 import { FormContainer } from './styles'
@@ -40,7 +40,7 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
 
     return (
         <FormContainer onSubmit={handleSubmit(preUpdateHandler)}>
-            <InputTombTime
+            <TrackingInput
                 {...registerInput}
                 ref={(node) => {
                     maskitoRef(node)
@@ -50,9 +50,9 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
                 type="text"
                 placeholder={placeholder}
             />
-            <UpdateButton disabled={inputIsEmptyOrErrored} type="submit">
+            <TrackingButton disabled={inputIsEmptyOrErrored} type="submit">
                 Calculate
-            </UpdateButton>
+            </TrackingButton>
         </FormContainer>
     )
 })

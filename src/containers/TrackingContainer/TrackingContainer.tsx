@@ -2,37 +2,38 @@ import { Fragment, type ReactElement, useCallback, useEffect, useReducer, useRef
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
 // app
-import { InputTombTime, UpdateButton } from '@/components/TrackingContainer/styles'
-import { MvpInformation, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
+import { TrackingButton, TrackingInput } from '@/components/TrackingContainer/styles'
+import { MvpInformation, TrackingAside, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
 import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
 // self
 import {
     ActionButton,
     Header,
+    HeaderActionsContainer,
     HeaderDisplayDates,
     MvpInformationContainer,
     MvpSprite,
     MvpSpriteContainer,
     SearchContainer,
     TimeOfDeathContainer,
+    ToggleMenu,
     TrackerGridCell,
     TrackerGridContainer,
     TrackerGridRow,
     TrackingContainerStyled,
     UpdateContainer,
 } from './styles'
-import type { RagnarokMvp } from './types'
+import { type DispatcherStateModifier, type RagnarokMvp, type TrackingChange, TrackingChangeAction } from './types'
 
-const reducer = (
-    currentState: RagnarokMvp[],
-    beingModified: {
-        mvp: RagnarokMvp
-        updateTime: DateTime | null
+const reducer = (currentState: RagnarokMvp[], beingModified: DispatcherStateModifier) => {
+    if (beingModified.fullReset) {
+        localStorage.removeItem(localStorageMvpsKey)
+        return computeTrackingInitialState()
     }
-) => {
+
     const modifiedMvps = [
-        { ...beingModified.mvp, timeOfDeath: beingModified.updateTime },
+        { ...beingModified.mvp, timeOfDeath: beingModified.timeOfDeathToUpdate },
         ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
     ]
 
@@ -45,14 +46,21 @@ const reducer = (
     return modifiedMvps
 }
 
+const computeUndoAction = (action: TrackingChangeAction): TrackingChangeAction => {
+    if (action === TrackingChangeAction.manualTrack) return TrackingChangeAction.undoManualTrack
+    if (action === TrackingChangeAction.track) return TrackingChangeAction.undoTrack
+    if (action === TrackingChangeAction.reset) return TrackingChangeAction.undoReset
+    return TrackingChangeAction.undo
+}
+
 const TrackingContainer = (): ReactElement => {
     const searchSubject = useRef(new Subject<string>()).current
     const searchInputRef = useRef<HTMLInputElement>(null)
 
     const [searchMvp, setSearchMvp] = useState('')
-    const [undoState, setUndoState] = useState<[number, DateTime | null][]>([])
-
-    const [ragnarokMvps, dispatcher] = useReducer(reducer, computeTrackingInitialState())
+    const [openAside, setOpenAside] = useState(false)
+    const [changesState, setChangesState] = useState<TrackingChange[]>([])
+    const [mvpsList, dispatcher] = useReducer(reducer, computeTrackingInitialState())
 
     const cleanSearchInput = useCallback(() => {
         setSearchMvp('')
@@ -61,20 +69,29 @@ const TrackingContainer = (): ReactElement => {
         }
     }, [searchInputRef])
 
-    const addActionToUndoState = useCallback((id: number, timeOfDeath: DateTime | null) => {
-        setUndoState((currentState) => {
-            return [[id, timeOfDeath] as [number, DateTime], ...currentState].slice(0, 5)
-        })
-    }, [])
+    const addChangeToHistory = useCallback(
+        (change: {
+            action: TrackingChangeAction
+            mvp: RagnarokMvp
+            timeOfDeathFrom: DateTime | null
+            timeOfDeathTo: DateTime | null
+        }) => {
+            setChangesState((currentState) => {
+                return [{ ...change, timestamp: DateTime.now().setZone(defaultTimeZoneName) }, ...currentState]
+            })
+        },
+        []
+    )
 
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
         const updateTime = DateTime.now().setZone(defaultTimeZoneName)
-
-        if (mvp.timeOfDeath || !updateTime) {
-            addActionToUndoState(mvp.id, mvp.timeOfDeath)
-        }
-
-        dispatcher({ mvp, updateTime })
+        addChangeToHistory({
+            action: TrackingChangeAction.track,
+            mvp,
+            timeOfDeathFrom: mvp.timeOfDeath,
+            timeOfDeathTo: updateTime,
+        })
+        dispatcher({ mvp, timeOfDeathToUpdate: updateTime })
         cleanSearchInput()
     }
 
@@ -86,7 +103,13 @@ const TrackingContainer = (): ReactElement => {
                 .setZone(defaultTimeZoneName)
                 .set({ hour, minute, second: 0, millisecond: 0 })
 
-            dispatcher({ mvp, updateTime: tombTime })
+            addChangeToHistory({
+                action: TrackingChangeAction.manualTrack,
+                mvp,
+                timeOfDeathFrom: mvp.timeOfDeath,
+                timeOfDeathTo: tombTime,
+            })
+            dispatcher({ mvp, timeOfDeathToUpdate: tombTime })
             cleanSearchInput()
         },
         []
@@ -94,28 +117,55 @@ const TrackingContainer = (): ReactElement => {
 
     const resetTimeFromMvpFactory = useCallback(
         (mvp: RagnarokMvp) => () => {
-            if (mvp.timeOfDeath) {
-                addActionToUndoState(mvp.id, mvp.timeOfDeath)
-            }
-
-            dispatcher({ mvp, updateTime: null })
-        },
-        []
-    )
-
-    const undoActionFactory = useCallback(
-        (mvp: RagnarokMvp) => () => {
-            setUndoState((currentState) => {
-                const [_, timeOfDeath] = currentState[0]
-
-                // update regardless if it is null or actual date
-                dispatcher({ mvp, updateTime: timeOfDeath })
-
-                return currentState.slice(1)
+            addChangeToHistory({
+                action: TrackingChangeAction.reset,
+                mvp,
+                timeOfDeathFrom: mvp.timeOfDeath,
+                timeOfDeathTo: null,
             })
+            dispatcher({ mvp, timeOfDeathToUpdate: null })
         },
         []
     )
+
+    const undoChangeAndAddToHistory = useCallback(
+        (undo: TrackingChange) => () => {
+            console.log('-----------------------------')
+            console.log(undo)
+            const actionToUse = computeUndoAction(undo.action)
+
+            addChangeToHistory({
+                action: actionToUse,
+                mvp: undo.mvp,
+                timeOfDeathFrom: null,
+                timeOfDeathTo: null,
+            })
+            dispatcher({ mvp: undo.mvp, timeOfDeathToUpdate: undo.timeOfDeathFrom })
+        },
+        []
+    )
+
+    const toggleAsideOpen = useCallback(() => setOpenAside((current) => !current), [])
+
+    // aside full reset
+    const resetChangesState = useCallback(() => {
+        setChangesState([])
+        dispatcher({
+            fullReset: true,
+            mvp: {
+                id: 0,
+                map: '',
+                mobId: '',
+                name: '',
+                spawnTime: {
+                    minMinutes: 0,
+                    maxMinutes: 0,
+                },
+                timeOfDeath: null,
+            },
+            timeOfDeathToUpdate: null,
+        })
+    }, [])
 
     useEffect(() => {
         const searchSubscription = searchSubject.pipe(debounceTime(300)).subscribe((search) => {
@@ -127,7 +177,7 @@ const TrackingContainer = (): ReactElement => {
         }
     }, [])
 
-    const searchFilteredMvps = ragnarokMvps.filter(
+    const searchFilteredMvps = mvpsList.filter(
         (mvp) =>
             mvp.name.toLowerCase().includes(searchMvp.toLowerCase()) ||
             mvp.map.toLowerCase().includes(searchMvp.toLowerCase())
@@ -139,22 +189,34 @@ const TrackingContainer = (): ReactElement => {
     return (
         <TrackingContainerStyled>
             <Header>
-                <SearchContainer>
-                    <label htmlFor="searchMvp">Search for name or map</label>
-                    <InputTombTime
-                        id="searchMvp"
-                        onChange={(changeEvent) => searchSubject.next(changeEvent.target.value)}
-                        placeholder="Dark Lord / pay"
-                        ref={searchInputRef}
-                        style={{ width: 'auto' }}
-                        type="text"
-                    />
-                </SearchContainer>
+                <HeaderActionsContainer>
+                    <SearchContainer>
+                        <label htmlFor="searchMvp">Search for name or map</label>
+                        <TrackingInput
+                            id="searchMvp"
+                            onChange={(changeEvent) => searchSubject.next(changeEvent.target.value)}
+                            placeholder="Dark Lord / pay"
+                            ref={searchInputRef}
+                            style={{ width: 'auto' }}
+                            type="text"
+                        />
+                    </SearchContainer>
+                    <ToggleMenu onClick={toggleAsideOpen} title="Menu">
+                        &#9776;
+                    </ToggleMenu>
+                </HeaderActionsContainer>
                 <HeaderDisplayDates>
                     <div>Server time: {serverTime.toFormat('HH:mm')}</div>
                     <div>Your time: {localTime.toFormat('HH:mm')} </div>
                 </HeaderDisplayDates>
             </Header>
+
+            <TrackingAside
+                changes={changesState}
+                fullTrackerReset={resetChangesState}
+                open={openAside}
+                undoChangeFactory={undoChangeAndAddToHistory}
+            />
 
             <TrackerGridContainer>
                 <TrackerGridRow $isHeader={true}>
@@ -167,10 +229,12 @@ const TrackingContainer = (): ReactElement => {
                     const { id, map, mobId, name, spawnTime, sprite, timeOfDeath } = mvp
 
                     const spriteToUse = sprite ?? 'fallback.png'
-                    const hasActionToUndo = Array.isArray(undoState.find((tuple) => tuple[0] === mvp.id))
+                    const trackingChange = changesState
+                        .slice(0, 1)
+                        .find((history) => history.mvp.id === mvp.id && !history.action.startsWith('UNDO'))
 
                     return (
-                        <TrackerGridRow key={id}>
+                        <TrackerGridRow key={`tracking-row-${id}`}>
                             <TrackerGridCell>
                                 <MvpInformationContainer>
                                     <MvpSpriteContainer>
@@ -183,14 +247,18 @@ const TrackingContainer = (): ReactElement => {
                                 <TimeOfDeathContainer>
                                     {timeOfDeath && (
                                         <Fragment>
-                                            💀 {timeOfDeath?.toFormat('HH:mm')}
+                                            💀 {timeOfDeath?.toLocaleString(DateTime.TIME_24_SIMPLE)}
                                             <ActionButton onClick={resetTimeFromMvpFactory(mvp)} title="Remove">
                                                 ❌
                                             </ActionButton>
                                         </Fragment>
                                     )}
-                                    {hasActionToUndo && (
-                                        <ActionButton onClick={undoActionFactory(mvp)} title="Undo">
+
+                                    {Boolean(trackingChange) && (
+                                        <ActionButton
+                                            onClick={undoChangeAndAddToHistory(trackingChange as TrackingChange)}
+                                            title="Undo"
+                                        >
                                             ◀️
                                         </ActionButton>
                                     )}
@@ -199,7 +267,7 @@ const TrackingContainer = (): ReactElement => {
                             </TrackerGridCell>
                             <TrackerGridCell>
                                 <UpdateContainer>
-                                    <UpdateButton onClick={realTimeUpdateFactory(mvp)}>Track</UpdateButton>
+                                    <TrackingButton onClick={realTimeUpdateFactory(mvp)}>Track</TrackingButton>
                                     <div style={{ padding: '0.25rem' }}>or</div>
                                     <UpdateFromTombForm updateFromTomb={fromTombUpdateFactory(mvp)} />
                                 </UpdateContainer>

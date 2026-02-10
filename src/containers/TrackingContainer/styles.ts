@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 
 export const TrackingContainerStyled = styled.div`
+    position: relative;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -20,11 +21,32 @@ export const Header = styled.header`
     background-color: var(--color-primary);
 
     @media (min-width: 770px) {
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 3fr 1fr 10px;
     }
 
     @media (min-width: 1280px) {
-        grid-template-columns: 480px 240px;
+        grid-template-columns: 480px 240px 10px;
+    }
+`
+
+export const HeaderActionsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+`
+
+export const ToggleMenu = styled.button`
+    margin-top: 12px;
+    padding: 0;
+    color: white;
+    font-size: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--color-variation-ended);
     }
 `
 

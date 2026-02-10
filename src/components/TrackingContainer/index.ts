@@ -1,3 +1,5 @@
 export * from './MvpInformation'
 export * from './UpdateFromTombForm'
 export * from './TrackingSpawnTime'
+export * from './TrackingAside'
+export * from './styles'

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-export const UpdateButton = styled.button`
+export const TrackingButton = styled.button`
     padding: 0.5rem;
     color: #f8f9fa;
     background-color: var(--color-primary);
@@ -8,8 +8,8 @@ export const UpdateButton = styled.button`
     border-radius: 0.25rem;
     cursor: pointer;
     transition:
-        color 0.2s ease,
-        background-color 0.2s ease;
+        color 125ms ease,
+        background-color 125ms ease;
 
     &:hover {
         color: white;
@@ -28,7 +28,7 @@ export const UpdateButton = styled.button`
     }
 `
 
-export const InputTombTime = styled.input<{ $hasError?: boolean }>`
+export const TrackingInput = styled.input<{ $hasError?: boolean }>`
     padding: 0.5rem;
     width: 55px;
     border: 1px solid var(--color-primary);
