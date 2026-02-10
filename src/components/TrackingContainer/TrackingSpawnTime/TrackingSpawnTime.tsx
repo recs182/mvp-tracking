@@ -25,10 +25,10 @@ type MemoReturn = {
 const toRelativeAccurate = (target: DateTime): string => {
     const differenceInMilliseconds = target.toMillis() - DateTime.now().setZone(defaultTimeZoneName).toMillis()
     const duration = Duration.fromMillis(Math.abs(differenceInMilliseconds))
-        .shiftTo('hours', 'minutes')
+        .shiftTo('hours', 'minutes', 'seconds')
         .mapUnits((unit) => Math.floor(unit))
 
-    const parts = (['hours', 'minutes'] as const)
+    const parts = (['hours', 'minutes', 'seconds'] as const)
         .filter((unit) => duration.get(unit) > 0)
         .reduce((merge, unit) => merge + duration.get(unit), 0)
 
@@ -85,7 +85,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     }, [mvp, autoUpdate])
 
     useEffect(() => {
-        const intervalId = setInterval(() => setAutoUpdate((current) => current + 1), 30000)
+        const intervalId = setInterval(() => setAutoUpdate((current) => current + 1), 1000)
         return () => clearInterval(intervalId)
     }, [])
 
