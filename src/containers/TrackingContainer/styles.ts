@@ -173,7 +173,7 @@ export const TimeOfDeathContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 `
 
 export const ActionButton = styled.button`

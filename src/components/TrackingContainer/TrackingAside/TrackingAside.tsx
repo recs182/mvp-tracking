@@ -1,8 +1,9 @@
 import { type ReactElement, useCallback } from 'react'
 import { DateTime } from 'luxon'
+import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 // app
 import { type TrackingChange } from '@/containers/TrackingContainer/types'
-import { TrackingButton, TrackingToggleMenu } from '@/components/TrackingContainer'
+import { TrackingButton } from '@/components/TrackingContainer'
 // self
 import {
     AsideContentContainer,
@@ -15,6 +16,7 @@ import {
     ResetAllContainer,
     TrackingAsideStyled,
 } from './styles'
+import { IconButton } from '@radix-ui/themes'
 
 export interface TrackingAsideProps {
     changes: TrackingChange[]
@@ -42,9 +44,9 @@ export const TrackingAside = ({
             <AsideContentContainer>
                 <AsideContentHeader>
                     Changes
-                    <TrackingToggleMenu onClick={toggleOpen} title="Menu">
-                        &#9776;
-                    </TrackingToggleMenu>
+                    <IconButton variant="surface" onClick={toggleOpen} title="Menu">
+                        <HamburgerMenuIcon />
+                    </IconButton>
                 </AsideContentHeader>
                 <AsideContentOverflow>
                     {changes.map((change, index) => {

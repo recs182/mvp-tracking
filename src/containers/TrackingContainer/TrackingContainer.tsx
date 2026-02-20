@@ -1,14 +1,23 @@
 import { Fragment, type ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
+import { Button, Flex, IconButton, Tooltip } from '@radix-ui/themes'
+import {
+    Cross1Icon,
+    HamburgerMenuIcon,
+    MoonIcon,
+    ResetIcon,
+    TargetIcon,
+    TimerIcon,
+    UpdateIcon,
+} from '@radix-ui/react-icons'
 // app
-import { TrackingButton, TrackingInput, TrackingToggleMenu } from '@/components/TrackingContainer/styles'
+import { TrackingButton, TrackingInput } from '@/components/TrackingContainer/styles'
 import { MvpInformation, TrackingAside, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
 import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
-import { defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
+import { defaultDateTimeFormat, defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
 // self
 import {
-    ActionButton,
     Header,
     HeaderActionsContainer,
     HeaderDisplayDates,
@@ -16,7 +25,6 @@ import {
     MvpSprite,
     MvpSpriteContainer,
     SearchContainer,
-    TimeOfDeathContainer,
     TrackerGridCell,
     TrackerGridContainer,
     TrackerGridRow,
@@ -96,12 +104,14 @@ const TrackingContainer = (): ReactElement => {
     }
 
     const fromTombUpdateFactory = useCallback(
-        (mvp: RagnarokMvp) => (data: { tombTime: string }) => {
+        (mvp: RagnarokMvp) => (data: { tombTime: string; confirmedTombTime?: DateTime }) => {
             const [hour, minute] = data.tombTime.split(':').map(Number)
 
-            const tombTime = DateTime.now()
-                .setZone(defaultTimeZoneName)
-                .set({ hour, minute, second: 0, millisecond: 0 })
+            console.log('data.confirmedTombTime', data.confirmedTombTime)
+
+            const tombTime = data.confirmedTombTime
+                ? data.confirmedTombTime
+                : DateTime.now().setZone(defaultTimeZoneName).set({ hour, minute, second: 0, millisecond: 0 })
 
             addChangeToHistory({
                 action: TrackingChangeAction.manualTrack,
@@ -130,8 +140,6 @@ const TrackingContainer = (): ReactElement => {
 
     const undoChangeAndAddToHistory = useCallback(
         (undo: TrackingChange) => () => {
-            console.log('-----------------------------')
-            console.log(undo)
             const actionToUse = computeUndoAction(undo.action)
 
             addChangeToHistory({
@@ -203,9 +211,9 @@ const TrackingContainer = (): ReactElement => {
                             type="text"
                         />
                     </SearchContainer>
-                    <TrackingToggleMenu onClick={toggleAsideOpen} style={{ marginTop: '12px' }} title="Menu">
-                        &#9776;
-                    </TrackingToggleMenu>
+                    <IconButton variant="surface" onClick={toggleAsideOpen} style={{ marginTop: '12px' }} title="Menu">
+                        <HamburgerMenuIcon />
+                    </IconButton>
                 </HeaderActionsContainer>
                 <HeaderDisplayDates>
                     <div>Server time: {serverTime.toFormat('HH:mm')}</div>
@@ -223,9 +231,21 @@ const TrackingContainer = (): ReactElement => {
 
             <TrackerGridContainer>
                 <TrackerGridRow $isHeader={true}>
-                    <TrackerGridCell>🐉 Mvp information</TrackerGridCell>
-                    <TrackerGridCell>⏳ Timers</TrackerGridCell>
-                    <TrackerGridCell>🔃 Update timers</TrackerGridCell>
+                    <TrackerGridCell>
+                        <Flex align="center" gap="2">
+                            <TargetIcon /> Mvp information
+                        </Flex>
+                    </TrackerGridCell>
+                    <TrackerGridCell>
+                        <Flex align="center" gap="2">
+                            <TimerIcon /> Timers
+                        </Flex>
+                    </TrackerGridCell>
+                    <TrackerGridCell>
+                        <Flex align="center" gap="2">
+                            <UpdateIcon /> Update timers
+                        </Flex>
+                    </TrackerGridCell>
                 </TrackerGridRow>
 
                 {searchFilteredMvps.sort(sortTrackingMvpList).map((mvp) => {
@@ -247,25 +267,38 @@ const TrackingContainer = (): ReactElement => {
                                 </MvpInformationContainer>
                             </TrackerGridCell>
                             <TrackerGridCell>
-                                <TimeOfDeathContainer>
+                                <Flex align="center" gap="4">
                                     {timeOfDeath && (
                                         <Fragment>
-                                            💀 {timeOfDeath?.toLocaleString(DateTime.TIME_24_SIMPLE)}
-                                            <ActionButton onClick={resetTimeFromMvpFactory(mvp)} title="Remove">
-                                                ❌
-                                            </ActionButton>
+                                            <Tooltip content={timeOfDeath?.toFormat(defaultDateTimeFormat)}>
+                                                <Flex align="center" gap="2">
+                                                    <MoonIcon /> {timeOfDeath?.toLocaleString(DateTime.TIME_24_SIMPLE)}
+                                                </Flex>
+                                            </Tooltip>
+                                            <Tooltip content="Remove">
+                                                <IconButton
+                                                    color="red"
+                                                    variant="ghost"
+                                                    onClick={resetTimeFromMvpFactory(mvp)}
+                                                >
+                                                    <Cross1Icon />
+                                                </IconButton>
+                                            </Tooltip>
                                         </Fragment>
                                     )}
 
                                     {Boolean(trackingChange) && (
-                                        <ActionButton
-                                            onClick={undoChangeAndAddToHistory(trackingChange as TrackingChange)}
-                                            title="Undo"
-                                        >
-                                            ◀️
-                                        </ActionButton>
+                                        <Tooltip content="Undo">
+                                            <Button
+                                                color="blue"
+                                                variant="ghost"
+                                                onClick={undoChangeAndAddToHistory(trackingChange as TrackingChange)}
+                                            >
+                                                <ResetIcon />
+                                            </Button>
+                                        </Tooltip>
                                     )}
-                                </TimeOfDeathContainer>
+                                </Flex>
                                 <TrackingSpawnTime mvp={mvp} />
                             </TrackerGridCell>
                             <TrackerGridCell>
