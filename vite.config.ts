@@ -5,7 +5,13 @@ import { resolve } from 'path'
 // https://vite.dev/config/
 export default defineConfig({
     base: '/mvp-tracking/',
-    plugins: [react()],
+    plugins: [
+        react({
+            babel: {
+                plugins: ['babel-plugin-react-compiler'],
+            },
+        }),
+    ],
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'),
