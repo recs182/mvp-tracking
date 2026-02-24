@@ -40,7 +40,7 @@ export const AsideContentHeader = styled.div`
 `
 
 export const AsideContentOverflow = styled.div`
-    height: calc(100dvh - 140px);
+    height: calc(100dvh - 160px);
     overflow-y: auto;
 `
 
@@ -73,20 +73,4 @@ export const ResetAllContainer = styled.div`
     padding: 0 1rem 1rem;
     display: flex;
     flex-direction: row;
-`
-
-export const ResetAllButton = styled.button`
-    padding: 0.5rem;
-    color: var(--color-variation-progress);
-    background-color: transparent;
-    border: 1px solid var(--color-variation-progress);
-    cursor: pointer;
-    transition:
-        color 125ms,
-        background-color 125ms;
-
-    &:hover {
-        color: white;
-        background-color: var(--color-variation-progress);
-    }
 `

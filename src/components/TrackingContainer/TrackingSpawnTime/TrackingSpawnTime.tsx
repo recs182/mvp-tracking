@@ -1,3 +1,4 @@
+'use no memo'
 import { Fragment, memo, type ReactElement, useEffect, useMemo, useState } from 'react'
 import { DateTime, Duration } from 'luxon'
 // app

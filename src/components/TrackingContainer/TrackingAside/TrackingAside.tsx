@@ -1,6 +1,7 @@
 import { type ReactElement, useCallback } from 'react'
 import { DateTime } from 'luxon'
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
+import { Button, IconButton } from '@radix-ui/themes'
 // app
 import { type TrackingChange } from '@/containers/TrackingContainer/types'
 import { TrackingButton } from '@/components/TrackingContainer'
@@ -12,11 +13,9 @@ import {
     ChangeContainer,
     ChangeInformation,
     ChangeInformationContainer,
-    ResetAllButton,
     ResetAllContainer,
     TrackingAsideStyled,
 } from './styles'
-import { IconButton } from '@radix-ui/themes'
 
 export interface TrackingAsideProps {
     changes: TrackingChange[]
@@ -77,10 +76,12 @@ export const TrackingAside = ({
                     {!changes.length && <ChangeContainer>No changes to show yet</ChangeContainer>}
                 </AsideContentOverflow>
             </AsideContentContainer>
-            <AsideContentContainer>
+            <AsideContentContainer style={{ marginTop: 'auto' }}>
                 <AsideContentHeader>Danger Zone</AsideContentHeader>
                 <ResetAllContainer>
-                    <ResetAllButton onClick={fullTrackerResetConfirmation}>Full tracker reset</ResetAllButton>
+                    <Button color="red" onClick={fullTrackerResetConfirmation}>
+                        Full tracker reset
+                    </Button>
                 </ResetAllContainer>
             </AsideContentContainer>
         </TrackingAsideStyled>
