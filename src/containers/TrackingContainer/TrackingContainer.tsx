@@ -1,35 +1,46 @@
 import { Fragment, type ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
-import { Button, Flex, IconButton, Tooltip } from '@radix-ui/themes'
+import { Button, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from '@radix-ui/themes'
 import {
     Cross1Icon,
+    EnterIcon,
+    ExclamationTriangleIcon,
+    ExitIcon,
+    ExternalLinkIcon,
+    GlobeIcon,
     HamburgerMenuIcon,
+    MagnifyingGlassIcon,
     MoonIcon,
     ResetIcon,
     TargetIcon,
     TimerIcon,
     UpdateIcon,
 } from '@radix-ui/react-icons'
+import { toast } from 'sonner'
 // app
-import { TrackingButton, TrackingInput } from '@/components/TrackingContainer/styles'
-import { MvpInformation, TrackingAside, TrackingSpawnTime, UpdateFromTombForm } from '@/components/TrackingContainer'
-import { computeTrackingInitialState, sortTrackingMvpList } from '@/helpers/TrackingContainer'
-import { defaultDateTimeFormat, defaultTimeZoneName, localStorageMvpsKey } from '@/constants.ts'
+import {
+    HistoryDialog,
+    ImportDialog,
+    MvpInformation,
+    ResetDialog,
+    TimeZoneDialog,
+    TrackingSpawnTime,
+    UpdateFromTombForm,
+} from '@/components'
+import { computeTimeZone, computeTrackingInitialState, sortTrackingMvpList } from '@/helpers'
+import { defaultDateTimeFormat, localStorageMvpsKey } from '@/constants'
 // self
 import {
     Header,
-    HeaderActionsContainer,
     HeaderDisplayDates,
     MvpInformationContainer,
     MvpSprite,
     MvpSpriteContainer,
-    SearchContainer,
     TrackerGridCell,
     TrackerGridContainer,
     TrackerGridRow,
     TrackingContainerStyled,
-    TrackingOverlay,
     UpdateContainer,
 } from './styles'
 import { type DispatcherStateModifier, type RagnarokMvp, type TrackingChange, TrackingChangeAction } from './types'
@@ -65,10 +76,14 @@ const TrackingContainer = (): ReactElement => {
     const searchSubject = useRef(new Subject<string>()).current
     const searchInputRef = useRef<HTMLInputElement>(null)
 
-    const [searchMvp, setSearchMvp] = useState('')
-    const [openAside, setOpenAside] = useState(false)
-    const [changesState, setChangesState] = useState<TrackingChange[]>([])
     const [mvpsList, dispatcher] = useReducer(reducer, computeTrackingInitialState())
+    const [changesState, setChangesState] = useState<TrackingChange[]>([])
+    const [searchMvp, setSearchMvp] = useState('')
+
+    const [historyDialog, setHistoryDialog] = useState(false)
+    const [resetDialog, setResetDialog] = useState(false)
+    const [serverTimeDialog, setServerTimeDialog] = useState(false)
+    const [importDialog, setImportDialog] = useState(false)
 
     const cleanSearchInput = useCallback(() => {
         setSearchMvp('')
@@ -85,14 +100,14 @@ const TrackingContainer = (): ReactElement => {
             timeOfDeathTo: DateTime | null
         }) => {
             setChangesState((currentState) => {
-                return [{ ...change, timestamp: DateTime.now().setZone(defaultTimeZoneName) }, ...currentState]
+                return [{ ...change, timestamp: DateTime.now().setZone(computeTimeZone()) }, ...currentState]
             })
         },
         []
     )
 
     const realTimeUpdateFactory = (mvp: RagnarokMvp) => () => {
-        const updateTime = DateTime.now().setZone(defaultTimeZoneName)
+        const updateTime = DateTime.now().setZone(computeTimeZone())
         addChangeToHistory({
             action: TrackingChangeAction.track,
             mvp,
@@ -107,11 +122,9 @@ const TrackingContainer = (): ReactElement => {
         (mvp: RagnarokMvp) => (data: { tombTime: string; confirmedTombTime?: DateTime }) => {
             const [hour, minute] = data.tombTime.split(':').map(Number)
 
-            console.log('data.confirmedTombTime', data.confirmedTombTime)
-
             const tombTime = data.confirmedTombTime
                 ? data.confirmedTombTime
-                : DateTime.now().setZone(defaultTimeZoneName).set({ hour, minute, second: 0, millisecond: 0 })
+                : DateTime.now().setZone(computeTimeZone()).set({ hour, minute, second: 0, millisecond: 0 })
 
             addChangeToHistory({
                 action: TrackingChangeAction.manualTrack,
@@ -153,9 +166,7 @@ const TrackingContainer = (): ReactElement => {
         []
     )
 
-    const toggleAsideOpen = useCallback(() => setOpenAside((current) => !current), [])
-
-    // aside full reset
+    // full reset
     const resetChangesState = useCallback(() => {
         setChangesState([])
         dispatcher({
@@ -173,7 +184,47 @@ const TrackingContainer = (): ReactElement => {
             },
             timeOfDeathToUpdate: null,
         })
+
+        toast.success('Tracker has been reset', {
+            description: 'All tracked MVPs have been removed',
+        })
     }, [])
+
+    const trackedMvps = mvpsList.filter((mvp) => mvp.timeOfDeath)
+
+    const shareTimers = useCallback(() => {
+        if (trackedMvps) {
+            const toShare = trackedMvps.map((mvp) => {
+                return `${mvp.id}|${mvp.timeOfDeath?.toString()}`
+            })
+
+            navigator.clipboard
+                .writeText(toShare.join(';'))
+                .then(() => {
+                    toast.success('Tracked MVPs copied to clipboard', {
+                        description: 'You can now share it with your friends',
+                    })
+                })
+                .catch(() => {
+                    toast.error('Failed to copy to clipboard')
+                })
+        }
+    }, [trackedMvps])
+
+    const importTimers = useCallback(
+        (entries: { mvp: RagnarokMvp; timeOfDeath: DateTime }[]) => {
+            for (const { mvp, timeOfDeath } of entries) {
+                addChangeToHistory({
+                    action: TrackingChangeAction.manualTrack,
+                    mvp,
+                    timeOfDeathFrom: mvp.timeOfDeath,
+                    timeOfDeathTo: timeOfDeath,
+                })
+                dispatcher({ mvp, timeOfDeathToUpdate: timeOfDeath })
+            }
+        },
+        [addChangeToHistory]
+    )
 
     useEffect(() => {
         const searchSubscription = searchSubject.pipe(debounceTime(300)).subscribe((search) => {
@@ -191,43 +242,95 @@ const TrackingContainer = (): ReactElement => {
             mvp.map.toLowerCase().includes(searchMvp.toLowerCase())
     )
 
-    const serverTime = DateTime.now().setZone(defaultTimeZoneName)
+    const serverTime = DateTime.now().setZone(computeTimeZone())
     const localTime = DateTime.now()
 
     return (
         <TrackingContainerStyled>
-            <TrackingOverlay $show={openAside} onClick={toggleAsideOpen} title="Toggle menu" />
+            <ResetDialog open={resetDialog} onOpenChange={setResetDialog} resetTracker={resetChangesState} />
+
+            <HistoryDialog
+                changes={changesState}
+                open={historyDialog}
+                onOpenChange={setHistoryDialog}
+                undoChangeFactory={undoChangeAndAddToHistory}
+            />
+
+            <TimeZoneDialog open={serverTimeDialog} onOpenChange={setServerTimeDialog} />
+
+            <ImportDialog
+                mvpsList={mvpsList}
+                onImport={importTimers}
+                open={importDialog}
+                onOpenChange={setImportDialog}
+            />
 
             <Header>
-                <HeaderActionsContainer>
-                    <SearchContainer>
-                        <label htmlFor="searchMvp">Search for name or map</label>
-                        <TrackingInput
-                            id="searchMvp"
+                <Flex gap="4">
+                    <DropdownMenu.Root>
+                        <DropdownMenu.Trigger>
+                            <IconButton color="gray" variant="surface">
+                                <HamburgerMenuIcon />
+                            </IconButton>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content>
+                            <DropdownMenu.Item
+                                disabled={!changesState.length}
+                                onClick={!changesState.length ? undefined : () => setHistoryDialog(true)}
+                            >
+                                <UpdateIcon /> Session update history
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Separator />
+                            <DropdownMenu.Item onClick={() => setServerTimeDialog(true)}>
+                                <GlobeIcon /> Server time
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Separator />
+                            <DropdownMenu.Item
+                                disabled={!trackedMvps.length}
+                                onClick={!trackedMvps.length ? undefined : shareTimers}
+                            >
+                                <ExitIcon /> Share timers
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item onClick={() => setImportDialog(true)}>
+                                <EnterIcon /> Import timers
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Separator />
+                            <DropdownMenu.Item asChild>
+                                <a href="https://github.com/recs182/mvp-tracking/issues" target="_blank">
+                                    <ExternalLinkIcon /> Bug or Feature Request
+                                </a>
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item color="indigo" asChild>
+                                <a href="https://github.com/sponsors/recs182" target="_blank">
+                                    <ExternalLinkIcon /> Donate
+                                </a>
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Separator />
+                            <DropdownMenu.Item color="red" onClick={() => setResetDialog(true)}>
+                                <ExclamationTriangleIcon /> Reset tracker
+                            </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+
+                    <Flex direction="column" width="100%">
+                        <TextField.Root
                             onChange={(changeEvent) => searchSubject.next(changeEvent.target.value)}
-                            placeholder="Dark Lord / pay"
+                            placeholder="Search for mvp name or map"
                             ref={searchInputRef}
                             style={{ width: 'auto' }}
                             type="text"
-                        />
-                    </SearchContainer>
-                    <IconButton variant="surface" onClick={toggleAsideOpen} style={{ marginTop: '12px' }} title="Menu">
-                        <HamburgerMenuIcon />
-                    </IconButton>
-                </HeaderActionsContainer>
+                        >
+                            <TextField.Slot>
+                                <MagnifyingGlassIcon />
+                            </TextField.Slot>
+                        </TextField.Root>
+                    </Flex>
+                </Flex>
                 <HeaderDisplayDates>
-                    <div>Server time: {serverTime.toFormat('HH:mm')}</div>
-                    <div>Your time: {localTime.toFormat('HH:mm')} </div>
+                    <Text size="1">Server time: {serverTime.toFormat('HH:mm')}</Text>
+                    <Text size="1">Your time: {localTime.toFormat('HH:mm')} </Text>
                 </HeaderDisplayDates>
             </Header>
-
-            <TrackingAside
-                changes={changesState}
-                fullTrackerReset={resetChangesState}
-                open={openAside}
-                toggleOpen={toggleAsideOpen}
-                undoChangeFactory={undoChangeAndAddToHistory}
-            />
 
             <TrackerGridContainer>
                 <TrackerGridRow $isHeader={true}>
@@ -303,7 +406,9 @@ const TrackingContainer = (): ReactElement => {
                             </TrackerGridCell>
                             <TrackerGridCell>
                                 <UpdateContainer>
-                                    <TrackingButton onClick={realTimeUpdateFactory(mvp)}>Track</TrackingButton>
+                                    <Button onClick={realTimeUpdateFactory(mvp)} variant="surface">
+                                        Track
+                                    </Button>
                                     <div style={{ padding: '0.25rem' }}>or</div>
                                     <UpdateFromTombForm updateFromTomb={fromTombUpdateFactory(mvp)} />
                                 </UpdateContainer>

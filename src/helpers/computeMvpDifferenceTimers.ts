@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
-import { defaultTimeZoneName } from '@/constants'
+import { computeTimeZone } from '@/helpers'
 
 type ComputeMvpDifferenceTimers = (mvp: RagnarokMvp) => {
     maximumDifferenceInMinutes: number
@@ -17,7 +17,7 @@ export const computeMvpDifferenceTimers: ComputeMvpDifferenceTimers = (mvp) => {
         }
     }
 
-    const dateUTC = DateTime.now().setZone(defaultTimeZoneName)
+    const dateUTC = DateTime.now().setZone(computeTimeZone())
 
     const maximumSpawnTime = timeOfDeath.plus({ minutes: spawnTime.maxMinutes })
     const maximumDifferenceInMinutes = dateUTC.diff(maximumSpawnTime, ['minutes']).toObject().minutes

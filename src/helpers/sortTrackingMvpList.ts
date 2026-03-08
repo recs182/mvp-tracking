@@ -1,5 +1,5 @@
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
-import { computeMvpDifferenceTimers } from '@/helpers/TrackingContainer'
+import { computeMvpDifferenceTimers } from '@/helpers'
 
 export const sortTrackingMvpList = (a: RagnarokMvp, b: RagnarokMvp) => {
     const aHasTime = Boolean(a.timeOfDeath)

@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form'
 import { useMaskito } from '@maskito/react'
 import { maskitoTimeOptionsGenerator } from '@maskito/kit'
 import { DateTime } from 'luxon'
-import { Box, Button, Dialog, Flex, Strong, Table, Text } from '@radix-ui/themes'
+import { Box, Button, Dialog, Flex, Strong, Table, Text, TextField } from '@radix-ui/themes'
 // app
-import { TrackingButton, TrackingInput } from '@/components/TrackingContainer/styles'
-import { defaultDateTimeFormat, defaultTimeZoneName } from '@/constants'
+import { defaultDateTimeFormat } from '@/constants'
 // self
 import { FormContainer } from './styles'
+import { computeTimeZone } from '@/helpers'
 
 type FormValues = { tombTime: string }
 
@@ -33,12 +33,12 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
 
     const preUpdateHandler = (data: FormValues) => {
         const [hour, minute] = data.tombTime.split(':').map(Number)
-        const tombTime = DateTime.now().setZone(defaultTimeZoneName).set({ hour, minute, second: 0, millisecond: 0 })
+        const tombTime = DateTime.now().setZone(computeTimeZone()).set({ hour, minute, second: 0, millisecond: 0 })
 
         reset()
 
-        const thirtyMinutesAgo = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: 30 })
-        if (tombTime.toMillis() > thirtyMinutesAgo.toMillis()) {
+        const now = DateTime.now().setZone(computeTimeZone())
+        if (tombTime > now) {
             setChosenTime(tombTime)
             setConfirmTimeDialog(true)
             return
@@ -58,7 +58,7 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
 
     const inputIsEmptyOrErrored = !dirtyFields['tombTime'] || errors['tombTime'] !== undefined
 
-    const placeholder = DateTime.now().setZone(defaultTimeZoneName).toFormat('HH:mm')
+    const placeholder = DateTime.now().setZone(computeTimeZone()).toFormat('HH:mm')
 
     const registerInput = register('tombTime', { required: true })
 
@@ -117,19 +117,21 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
                 </Dialog.Content>
             </Dialog.Root>
 
-            <TrackingInput
-                {...registerInput}
-                ref={(node) => {
-                    maskitoRef(node)
-                    registerInput.ref(node)
-                }}
-                $hasError={Boolean(errors['tombTime'])}
-                type="text"
-                placeholder={placeholder}
-            />
-            <TrackingButton disabled={inputIsEmptyOrErrored} type="submit">
+            <Box width="50px">
+                <TextField.Root
+                    color={Boolean(errors['tombTime']) ? 'red' : undefined}
+                    {...registerInput}
+                    ref={(node) => {
+                        maskitoRef(node)
+                        registerInput.ref(node)
+                    }}
+                    type="text"
+                    placeholder={placeholder}
+                />
+            </Box>
+            <Button disabled={inputIsEmptyOrErrored} type="submit" variant="surface">
                 Calculate
-            </TrackingButton>
+            </Button>
         </FormContainer>
     )
 })

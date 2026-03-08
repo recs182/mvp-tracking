@@ -3,10 +3,9 @@ import { Fragment, memo, type ReactElement, useEffect, useMemo, useState } from 
 import { DateTime, Duration } from 'luxon'
 // app
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
-import { computeMvpDifferenceTimers } from '@/helpers/TrackingContainer'
-import { defaultTimeZoneName } from '@/constants'
+import { computeMvpDifferenceTimers, computeTimeZone } from '@/helpers'
 // self
-import { RelativeDateContainer, TimerContainer } from './styles.ts'
+import { RelativeDateContainer, TimerContainer } from './styles'
 
 interface TrackingSpawnTimeProps {
     mvp: RagnarokMvp
@@ -24,7 +23,7 @@ type MemoReturn = {
 }
 
 const toRelativeAccurate = (target: DateTime): string => {
-    const differenceInMilliseconds = target.toMillis() - DateTime.now().setZone(defaultTimeZoneName).toMillis()
+    const differenceInMilliseconds = target.toMillis() - DateTime.now().setZone(computeTimeZone()).toMillis()
     const duration = Duration.fromMillis(Math.abs(differenceInMilliseconds))
         .shiftTo('hours', 'minutes', 'seconds')
         .mapUnits((unit) => Math.floor(unit))
@@ -50,7 +49,7 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     const [autoUpdate, setAutoUpdate] = useState<number>(0)
 
     const { maximumDifferenceInMinutes, minimumDifferenceInMinutes, variations } = useMemo<MemoReturn>(() => {
-        const dateUTC = DateTime.now().setZone(defaultTimeZoneName)
+        const dateUTC = DateTime.now().setZone(computeTimeZone())
 
         if (!mvp.timeOfDeath) {
             return {
@@ -101,8 +100,8 @@ export const TrackingSpawnTime = memo<TrackingSpawnTimeProps>(({ mvp }): ReactEl
     const mvpDoesNotHaveVariation = mvp.spawnTime.minMinutes === mvp.spawnTime.maxMinutes
     const variationToStartOrAlreadyStarted = variations.aboutToStart || variations.alreadyStarted
 
-    const minimumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: minimumDifferenceInMinutes })
-    const maximumDate = DateTime.now().setZone(defaultTimeZoneName).minus({ minutes: maximumDifferenceInMinutes })
+    const minimumDate = DateTime.now().setZone(computeTimeZone()).minus({ minutes: minimumDifferenceInMinutes })
+    const maximumDate = DateTime.now().setZone(computeTimeZone()).minus({ minutes: maximumDifferenceInMinutes })
 
     return (
         <TimerContainer

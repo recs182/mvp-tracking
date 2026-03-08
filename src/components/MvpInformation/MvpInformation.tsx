@@ -1,7 +1,7 @@
 import { memo, type ReactElement, useCallback } from 'react'
-import { Tooltip } from '@radix-ui/themes'
+import { Button, Flex, Text, Tooltip } from '@radix-ui/themes'
+// app
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
-import { MvpInformationStyled } from '@/components/TrackingContainer/MvpInformation/styles.ts'
 
 interface MvpInformationProps {
     map: string
@@ -34,16 +34,20 @@ export const MvpInformation = memo<MvpInformationProps>(({ map, mobId, name, spa
     )
 
     return (
-        <MvpInformationStyled>
-            <Tooltip content={`Click to copy @mi ${mobId} and paste in-game chat`}>
-                <button onClick={copyMobIdFactory(mobId)}>{name}</button>
-            </Tooltip>
-            <div>
+        <Flex direction="column">
+            <Flex>
+                <Tooltip content={`Click to copy @mi ${mobId} and paste in-game chat`}>
+                    <Button onClick={copyMobIdFactory(mobId)} variant="ghost">
+                        {name}
+                    </Button>
+                </Tooltip>
+            </Flex>
+            <Text as="div" size="1">
                 Map: <strong>{map}</strong>
-            </div>
-            <div>
+            </Text>
+            <Text as="div" size="1">
                 Spawn: <strong>{spawnTimeLabel}</strong>
-            </div>
-        </MvpInformationStyled>
+            </Text>
+        </Flex>
     )
 })

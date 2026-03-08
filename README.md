@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# Pre-renewal Ragnarok Online MVP Tracking
+A web-based MVP (Most Valuable Player) boss respawn timer tracker for pre-renewal Ragnarok Online servers. Keep tabs on when MVPs are due to respawn so you never miss a hunt.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Features
+- Comprehensive MVP Database — Tracks 70+ MVPs and mini-bosses across all major maps, including Guild Dungeon variants.
+- Respawn Timer Management — Log a time of death and see the estimated respawn window (min/max) for each MVP.
+- Smart Sorting — Active timers are prioritized, with MVPs closest to spawning shown first.
+- Timezone Support — Configurable timezone with local storage persistence, so your timers stay accurate across sessions.
+- Quick Mob Info — Click an MVP name to copy the @mi command to your clipboard for quick in-game lookup.
+- Tomb Update — Update MVP death times directly from tombstone information.
 
-Currently, two official plugins are available:
+## Tech Stack
+- React 19 with TypeScript
+- Vite for fast development and builds
+- Radix UI Themes for the component library
+- Styled Components for custom styling
+- Luxon for timezone-aware date/time handling
+- React Hook Form for form management
+- Maskito for input masking
+- React Router for routing
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## React Compiler
+### Prerequisites
+- Node.js (v18+ recommended)
+- Yarn package manager
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
+``` bash
+yarn install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Development
+``` bash
+yarn dev
 ```
+
+### Build
+``` bash
+yarn build
+```
+
+### Project Structure
+``` 
+src/
+├── assets/          # MVP database and timezone data
+├── components/      # Reusable UI components
+│   ├── MvpInformation/       # MVP name, map, and spawn window display
+│   ├── TrackingAside/        # Side panel for tracking controls
+│   ├── TrackingSpawnTime/    # Spawn countdown/timer display
+│   └── UpdateFromTombForm/   # Form to update death time from in-game tombstones
+├── containers/      # Page-level container components
+│   └── TrackingContainer/    # Main tracking view
+├── helpers/         # Utility functions (timers, sorting, timezone)
+├── hooks/           # Custom React hooks
+└── services/        # External service integrations
+```
+
+### License
+Not specified — add a license of your choice.

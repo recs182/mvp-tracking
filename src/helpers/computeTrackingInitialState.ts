@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import mvpsFromStatic from '@/assets/mvps'
-import { localStorageMvpsKey } from '@/constants.ts'
+import { localStorageMvpsKey } from '@/constants'
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
 
 type ComputeTrackingInitialState = () => RagnarokMvp[]

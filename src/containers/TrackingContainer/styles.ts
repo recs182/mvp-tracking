@@ -1,27 +1,5 @@
 import styled, { css } from 'styled-components'
 
-export const TrackingOverlay = styled.button<{ $show: boolean }>`
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.25);
-    border: none;
-    cursor: pointer;
-    backdrop-filter: blur(7px);
-    transform: translateX(-100%);
-    transition: transform 125ms ease;
-    z-index: 3;
-
-    ${({ $show }) =>
-        $show &&
-        css`
-            transform: translateX(0);
-        `}
-`
-
 export const TrackingContainerStyled = styled.div`
     position: relative;
     height: 100vh;
@@ -48,22 +26,6 @@ export const Header = styled.header`
 
     @media (min-width: 1280px) {
         grid-template-columns: 480px 240px 10px;
-    }
-`
-
-export const HeaderActionsContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-`
-
-export const SearchContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    > label {
-        font-size: 12px;
     }
 `
 
@@ -167,20 +129,6 @@ export const UpdateContainer = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 0.25rem;
-`
-
-export const TimeOfDeathContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-`
-
-export const ActionButton = styled.button`
-    padding: 0;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
 `
 
 export const MvpSpriteContainer = styled.div`
