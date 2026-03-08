@@ -11,9 +11,9 @@ import App from './App'
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
+        <Toaster position="top-right" theme="dark" />
         <Theme panelBackground="translucent" radius="large" accentColor="amber" appearance="dark">
             <App />
-            <Toaster position="top-right" theme="dark" />
         </Theme>
     </StrictMode>
 )
