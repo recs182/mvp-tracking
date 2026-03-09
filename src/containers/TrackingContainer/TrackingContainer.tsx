@@ -435,7 +435,14 @@ const TrackingContainer = (): ReactElement => {
                 {!searchFilteredMvps.length && (
                     <TrackerGridRow style={{ gridTemplateColumns: '1fr' }}>
                         <TrackerGridCell>
-                            Nothing found when searching for <strong>{searchMvp}</strong> 😞
+                            <Flex direction="column" width="100%" align="center" gap="1">
+                                <Flex gap="1">
+                                    Nothing found when searching for <strong>{searchMvp}</strong>
+                                </Flex>
+                                <Flex>
+                                    <img src={`./hmm.gif`} alt="hmmmm" />
+                                </Flex>
+                            </Flex>
                         </TrackerGridCell>
                     </TrackerGridRow>
                 )}
