@@ -117,7 +117,7 @@ export const UpdateFromTombForm = memo<UpdateFromTombFormProps>(({ updateFromTom
                 </Dialog.Content>
             </Dialog.Root>
 
-            <Box width="50px">
+            <Box width="51px">
                 <TextField.Root
                     color={Boolean(errors['tombTime']) ? 'red' : undefined}
                     {...registerInput}

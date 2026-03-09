@@ -5,6 +5,7 @@ export const TimerContainer = styled.div<{
     $variationStart: boolean
     $variationFinished: boolean
 }>`
+    line-height: 1.25;
     ${(props) => {
         if (props.$variationFinished) {
             return css`
