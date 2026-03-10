@@ -7,7 +7,6 @@ import {
     EnterIcon,
     ExclamationTriangleIcon,
     ExitIcon,
-    ExternalLinkIcon,
     GlobeIcon,
     HamburgerMenuIcon,
     MagnifyingGlassIcon,
@@ -301,17 +300,17 @@ const TrackingContainer = (): ReactElement => {
                             <DropdownMenu.Item onClick={() => setImportDialog(true)}>
                                 <EnterIcon /> Import timers
                             </DropdownMenu.Item>
-                            <DropdownMenu.Separator />
-                            <DropdownMenu.Item asChild>
-                                <a href="https://github.com/recs182/mvp-tracking/issues" target="_blank">
-                                    <ExternalLinkIcon /> Bug or Feature Request
-                                </a>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item color="indigo" asChild>
-                                <a href="https://github.com/sponsors/recs182" target="_blank">
-                                    <ExternalLinkIcon /> Donate
-                                </a>
-                            </DropdownMenu.Item>
+                            {/*<DropdownMenu.Separator />*/}
+                            {/*<DropdownMenu.Item asChild>*/}
+                            {/*    <a href="https://github.com/recs182/mvp-tracking/issues" target="_blank">*/}
+                            {/*        <ExternalLinkIcon /> Bug or Feature Request*/}
+                            {/*    </a>*/}
+                            {/*</DropdownMenu.Item>*/}
+                            {/*<DropdownMenu.Item color="indigo" asChild>*/}
+                            {/*    <a href="https://github.com/sponsors/recs182" target="_blank">*/}
+                            {/*        <ExternalLinkIcon /> Donate*/}
+                            {/*    </a>*/}
+                            {/*</DropdownMenu.Item>*/}
                             <DropdownMenu.Separator />
                             <DropdownMenu.Item color="red" onClick={() => setResetDialog(true)}>
                                 <ExclamationTriangleIcon /> Reset tracker
