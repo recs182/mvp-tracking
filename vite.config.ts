@@ -7,8 +7,8 @@ const manifest = {
     name: 'Pre-renewal RO MVP Tracking',
     short_name: 'MVP Tracker',
     description: 'Track MVP respawn timers for Pre-renewal Ragnarok Online',
-    start_url: '/mvp-tracking/',
-    scope: '/mvp-tracking/',
+    start_url: '/',
+    scope: '/',
     background_color: '#000000',
     theme_color: '#ffca16',
     icons: [
@@ -33,7 +33,7 @@ const manifest = {
 
 // https://vite.dev/config/
 export default defineConfig({
-    base: '/mvp-tracking/',
+    base: '/',
     plugins: [
         react({
             babel: {
