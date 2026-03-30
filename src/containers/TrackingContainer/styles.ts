@@ -21,11 +21,11 @@ export const Header = styled.header`
     background-color: var(--gray-1);
 
     @media (min-width: 770px) {
-        grid-template-columns: 3fr 1fr 10px;
+        grid-template-columns: 3fr 1fr;
     }
 
     @media (min-width: 1280px) {
-        grid-template-columns: 480px 240px 10px;
+        grid-template-columns: 480px 240px;
     }
 `
 

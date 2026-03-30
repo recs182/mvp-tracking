@@ -1,7 +1,7 @@
 import { Fragment, type ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { DateTime } from 'luxon'
 import { debounceTime, Subject } from 'rxjs'
-import { Button, DropdownMenu, Flex, IconButton, Popover, Text, TextField, Tooltip } from '@radix-ui/themes'
+import { Box, Button, DropdownMenu, Flex, IconButton, Popover, Text, TextField, Tooltip } from '@radix-ui/themes'
 import {
     Cross1Icon,
     EnterIcon,
@@ -318,7 +318,8 @@ const TrackingContainer = (): ReactElement => {
                     <Popover.Root>
                         <Popover.Trigger>
                             <Button variant="soft">
-                                <StarFilledIcon /> Donate
+                                <StarFilledIcon />
+                                <Box display={{ initial: 'none', sm: 'inline' }}> Donate</Box>
                             </Button>
                         </Popover.Trigger>
                         <Popover.Content style={{ backgroundColor: '#f7f7f7' }}>
