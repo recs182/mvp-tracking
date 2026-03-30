@@ -1,6 +1,6 @@
 import { type FC, useCallback, useState } from 'react'
-import { Button, Dialog, Flex, Select, Text } from '@radix-ui/themes'
-import { GlobeIcon } from '@radix-ui/react-icons'
+import { Button, Callout, Dialog, Flex, Select, Strong, Text } from '@radix-ui/themes'
+import { GlobeIcon, InfoCircledIcon } from '@radix-ui/react-icons'
 // app
 import { computeTimeZone } from '@/helpers'
 import timezones from '@/assets/timezones'
@@ -37,6 +37,22 @@ export const TimeZoneDialog: FC<TimeZoneDialogProps> = ({ onOpenChange, open }) 
                     If you are changing timezone with MVPs being tracked, it might show wrong timers, consider resetting
                     and setting timers again.
                 </Text>
+
+                <Callout.Root mb="4">
+                    <Callout.Icon>
+                        <InfoCircledIcon />
+                    </Callout.Icon>
+                    <Callout.Text>
+                        Tracker time is ABSOLUTE, it <Strong>DOES NOT</Strong> consider{' '}
+                        <Strong>Daylight saving time</Strong>.
+                        <br />
+                        <br />
+                        Most server will also have it as an absolute, means that it always stays the same.
+                        <br />
+                        If you server have Daylight saving time you need to change the tracker time manually to match
+                        your server time.
+                    </Callout.Text>
+                </Callout.Root>
 
                 <Flex direction="column">
                     <Select.Root value={timeZone} onValueChange={timeZoneHandler}>
