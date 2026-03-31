@@ -22,6 +22,7 @@ import {
     UploadIcon,
 } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
+import { useLocation } from 'react-router'
 // app
 import {
     HistoryDialog,
@@ -35,7 +36,7 @@ import {
 } from '@/components'
 import { computeTimeZone, computeTrackingInitialState, sortTrackingMvpList } from '@/helpers'
 import { defaultDateTimeFormat, localStorageMvpsKey } from '@/constants'
-import { useLocation } from 'react-router'
+import { SessionState, useWebRTC } from '@/services/webrtc'
 // self
 import {
     Header,
@@ -56,7 +57,6 @@ import {
     type TrackingChange,
     TrackingChangeAction,
 } from './types'
-import { SessionState, useWebRTC } from '@/services/webrtc'
 
 const reducer = (currentState: RagnarokMvp[], beingModified: DispatcherStateModifier) => {
     if (beingModified.fullReset) {
@@ -102,7 +102,7 @@ const TrackingContainer = (): ReactElement => {
     const [importDialog, setImportDialog] = useState(false)
     const [joinSessionDialog, setJoinSessionDialog] = useState(false)
 
-    const isLive = useMemo(() => location.pathname === '/live', [location.pathname])
+    const isLive = useMemo(() => true, [])
 
     const cleanSearchInput = useCallback(() => {
         setSearchMvp('')
