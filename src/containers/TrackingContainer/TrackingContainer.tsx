@@ -22,7 +22,6 @@ import {
     UploadIcon,
 } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
-import { useLocation } from 'react-router'
 // app
 import {
     HistoryDialog,
@@ -86,7 +85,6 @@ const computeUndoAction = (action: TrackingChangeAction): TrackingChangeAction =
 }
 
 const TrackingContainer = (): ReactElement => {
-    const location = useLocation()
     const webrtc = useWebRTC()
 
     const searchSubject = useRef(new Subject<string>()).current
