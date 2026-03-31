@@ -118,11 +118,22 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
 
             const database = getFirebaseDb()
 
-            // Write host presence and initial timer state
-            await Promise.all([
-                set(ref(database, `rooms/${code}/host`), true),
-                set(ref(database, `rooms/${code}/timers`), sanitizeState(mvps)),
+            // Check if there is already a host or existing timer data in Firebase
+            const [hostSnap, timersSnap] = await Promise.all([
+                get(ref(database, `rooms/${code}/host`)),
+                get(ref(database, `rooms/${code}/timers`)),
             ])
+
+            const hasHost = hostSnap.exists() && hostSnap.val() === true
+            const hasData = timersSnap.exists() && timersSnap.val() !== null
+
+            // Only seed initial state when Firebase has no host and no data
+            const writes: Promise<void>[] = [set(ref(database, `rooms/${code}/host`), true)]
+            if (!hasHost && !hasData) {
+                writes.push(set(ref(database, `rooms/${code}/timers`), sanitizeState(mvps)))
+            }
+
+            await Promise.all(writes)
 
             subscribeToRoom(code)
             setSessionState(SessionState.hosting)
