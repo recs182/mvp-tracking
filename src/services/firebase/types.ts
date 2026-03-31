@@ -18,9 +18,8 @@ export interface UseFirebaseRealTimeReturn {
     hostSession: (mvps: RagnarokMvp[]) => Promise<string> // returns room code
     joinSession: (code: string, mvps: RagnarokMvp[]) => Promise<void>
     leaveSession: () => void
-    resetRoomCode: () => string
-    checkForHost: (code: string) => Promise<boolean>
-    // outbound — call these when timer state changes
+    checkRoomExists: (code: string) => Promise<boolean>
+    // outbound — call these when the timer state changes
     broadcastUpdate: (id: number, timeOfDeath: DateTime | null) => void
     // inbound — subscribe to these in TrackingContainer
     onFullState$: Subject<TimerState>

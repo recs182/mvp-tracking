@@ -101,7 +101,7 @@ const TrackingContainer = (): ReactElement => {
     const [importDialog, setImportDialog] = useState(false)
     const [joinSessionDialog, setJoinSessionDialog] = useState(false)
 
-    const isShareable = useMemo(() => location.host === 'arkana.rot.splitledger.pro', [])
+    const isShareable = useMemo(() => ['arkana.rot.splitledger.pro', 'localhost'].includes(location.hostname), [])
 
     const cleanSearchInput = useCallback(() => {
         setSearchMvp('')
@@ -255,7 +255,7 @@ const TrackingContainer = (): ReactElement => {
                 .writeText(code)
                 .then(() => {
                     toast.success('Session started', {
-                        description: 'Room code copied to clipboard',
+                        description: 'Live session code copied to clipboard',
                     })
                 })
                 .catch(() => {
@@ -269,10 +269,10 @@ const TrackingContainer = (): ReactElement => {
             navigator.clipboard
                 .writeText(firebaseRealTime.roomCode)
                 .then(() => {
-                    toast.success('Room code copied to clipboard')
+                    toast.success('Live session code copied to clipboard')
                 })
                 .catch(() => {
-                    toast.error('Failed to copy room code')
+                    toast.error('Failed to copy live session code')
                 })
         }
     }, [firebaseRealTime.roomCode])
@@ -300,8 +300,8 @@ const TrackingContainer = (): ReactElement => {
     // AUTO JOINS LATEST ROOM
     useEffect(() => {
         if (isShareable && existingRoomCode) {
-            firebaseRealTime.checkForHost(existingRoomCode).then((host) => {
-                if (host) {
+            firebaseRealTime.checkRoomExists(existingRoomCode).then((exists) => {
+                if (exists) {
                     firebaseRealTime.joinSession(existingRoomCode, mvpsList).finally()
                 } else {
                     firebaseRealTime.hostSession(mvpsList).finally()
@@ -481,30 +481,25 @@ const TrackingContainer = (): ReactElement => {
 
                     {!isShareable && <Text size="1">Your time: {localTime.toFormat('HH:mm')}</Text>}
 
-                    {firebaseRealTime.sessionState === SessionState.connecting && (
-                        <Text size="1" color="yellow">
-                            ⏳ Connecting...
-                        </Text>
-                    )}
-
-                    {firebaseRealTime.sessionState === SessionState.hosting && (
-                        <Tooltip content="Click to copy room code">
-                            <Text
-                                size="1"
-                                color="green"
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => navigator.clipboard.writeText(firebaseRealTime.roomCode!)}
-                            >
-                                🟢 Sharing
+                    <Flex align="center">
+                        {firebaseRealTime.sessionState === SessionState.connecting && (
+                            <Text size="1" color="yellow">
+                                Connecting
                             </Text>
-                        </Tooltip>
-                    )}
+                        )}
 
-                    {firebaseRealTime.sessionState === SessionState.joined && (
-                        <Text size="1" color="green">
-                            🟢 Connected
-                        </Text>
-                    )}
+                        {firebaseRealTime.sessionState === SessionState.joined && (
+                            <Text size="1" color="green">
+                                Live updating
+                            </Text>
+                        )}
+
+                        {firebaseRealTime.sessionState === SessionState.hosting && (
+                            <Text size="1" color="green">
+                                Live update created
+                            </Text>
+                        )}
+                    </Flex>
                 </HeaderDisplayDates>
             </Header>
 

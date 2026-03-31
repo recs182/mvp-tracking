@@ -37,11 +37,6 @@ const getOrCreateRoomCode = (): string => {
     return newCode
 }
 
-export const resetRoomCode = (): string => {
-    localStorage.removeItem(localStorageRoomCodeKey)
-    return getOrCreateRoomCode()
-}
-
 export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
     const [sessionState, setSessionState] = useState<SessionState>(SessionState.idle)
     const [roomCode, setRoomCode] = useState<string | null>(null)
@@ -53,25 +48,13 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
     // Keep a ref to the current mvps so the firebase listener always has fresh data
     const mvpsRef = useRef<RagnarokMvp[]>([])
 
-    const cleanup = useCallback(
-        (removeHost = true) => {
-            firebaseUnsubscribe.current.forEach((unsub) => unsub())
-            firebaseUnsubscribe.current = []
+    const cleanup = useCallback(() => {
+        firebaseUnsubscribe.current.forEach((unsub) => unsub())
+        firebaseUnsubscribe.current = []
 
-            // Remove host presence if we were the host
-            if (removeHost) {
-                const code = roomCode
-                if (code) {
-                    const database = getFirebaseDb()
-                    remove(ref(database, `rooms/${code}/host`))
-                }
-            }
-
-            setSessionState(SessionState.idle)
-            setRoomCode(null)
-        },
-        [roomCode]
-    )
+        setSessionState(SessionState.idle)
+        setRoomCode(null)
+    }, [roomCode])
 
     const subscribeToRoom = useCallback(
         (code: string) => {
@@ -85,11 +68,16 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
                 const valid: TimerState = {}
                 Object.entries(incoming).forEach(([idStr, iso]) => {
                     const id = Number(idStr)
-                    const mvp = mvps.find((m) => m.id === id)
-                    if (!mvp || !iso) return
+                    const mvp = mvps.find((mvp) => mvp.id === id)
+                    if (!mvp || !iso) {
+                        return
+                    }
+
                     const mvpWithTime = { ...mvp, timeOfDeath: DateTime.fromISO(iso as string) }
                     const { maximumDifferenceInMinutes } = computeMvpDifferenceTimers(mvpWithTime)
-                    if (maximumDifferenceInMinutes < 0) valid[id] = iso as string
+                    if (maximumDifferenceInMinutes < 0) {
+                        valid[id] = iso as string
+                    }
                 })
 
                 const merged = mergeTimers(sanitizeState(mvps), valid, mvps)
@@ -106,15 +94,14 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
         [onFullState$, onTimerUpdate$]
     )
 
-    const checkForHost = useCallback(async (code: string): Promise<boolean> => {
+    const checkRoomExists = useCallback(async (code: string): Promise<boolean> => {
         const database = getFirebaseDb()
-        const snap = await get(ref(database, `rooms/${code}/host`))
-        return snap.exists() && snap.val() === true
+        const snap = await get(ref(database, `rooms/${code}`))
+        return snap.exists()
     }, [])
 
     const hostSession = useCallback(
         async (mvps: RagnarokMvp[]): Promise<string> => {
-            cleanup(false) // don't remove host — we're about to become one
             mvpsRef.current = mvps
             setSessionState(SessionState.connecting)
 
@@ -123,34 +110,18 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
 
             const database = getFirebaseDb()
 
-            // Check if there is already a host or existing timer data in Firebase
-            const [hostSnap, timersSnap] = await Promise.all([
-                get(ref(database, `rooms/${code}/host`)),
-                get(ref(database, `rooms/${code}/timers`)),
-            ])
-
-            const hasHost = hostSnap.exists() && hostSnap.val() === true
-            const hasData = timersSnap.exists() && timersSnap.val() !== null
-
-            // Only seed initial state when Firebase has no host and no data
-            const writes: Promise<void>[] = [set(ref(database, `rooms/${code}/host`), true)]
-            if (!hasHost && !hasData) {
-                writes.push(set(ref(database, `rooms/${code}/timers`), sanitizeState(mvps)))
-            }
-
-            await Promise.all(writes)
+            await set(ref(database, `rooms/${code}/timers`), sanitizeState(mvps))
 
             subscribeToRoom(code)
             setSessionState(SessionState.hosting)
 
             return code
         },
-        [cleanup, subscribeToRoom]
+        [subscribeToRoom]
     )
 
     const joinSession = useCallback(
         async (code: string, mvps: RagnarokMvp[]): Promise<void> => {
-            cleanup()
             localStorage.setItem(localStorageRoomCodeKey, code)
 
             mvpsRef.current = mvps
@@ -161,7 +132,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
 
             setSessionState(SessionState.joined)
         },
-        [cleanup, subscribeToRoom]
+        [subscribeToRoom]
     )
 
     const broadcastUpdate = useCallback(
@@ -185,7 +156,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
 
     useEffect(() => {
         return () => cleanup()
-    }, [cleanup])
+    }, [])
 
     return {
         sessionState,
@@ -193,8 +164,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
         hostSession,
         joinSession,
         leaveSession: cleanup,
-        resetRoomCode,
-        checkForHost,
+        checkRoomExists,
         broadcastUpdate,
         onFullState$,
         onTimerUpdate$,
