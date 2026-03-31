@@ -54,21 +54,3 @@ export default defineConfig({
         },
     },
 })
-
-// // Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
-//
-// // Your web app's Firebase configuration
-// const firebaseConfig = {
-//     apiKey: "AIzaSyDjzeLZlLxP59YRI2AZOFrtOMaN_W0Z1R8",
-//     authDomain: "mvp-tracking-e104b.firebaseapp.com",
-//     projectId: "mvp-tracking-e104b",
-//     storageBucket: "mvp-tracking-e104b.firebasestorage.app",
-//     messagingSenderId: "517716272669",
-//     appId: "1:517716272669:web:86e400a17470e309a008f4"
-// };
-//
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
