@@ -275,7 +275,7 @@ const TrackingContainer = (): ReactElement => {
                     toast.error('Failed to copy room code')
                 })
         }
-    }, [firebaseRealTime])
+    }, [firebaseRealTime.roomCode])
 
     const onJoinSession = useCallback(
         (code: string) => firebaseRealTime.joinSession(code, mvpsList),
