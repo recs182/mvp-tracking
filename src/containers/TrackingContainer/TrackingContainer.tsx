@@ -282,6 +282,11 @@ const TrackingContainer = (): ReactElement => {
         [firebaseRealTime, mvpsList]
     )
 
+    const onLeaveSession = useCallback(() => {
+        firebaseRealTime.leaveSession()
+        firebaseRealTime.resetRoomCode()
+    }, [firebaseRealTime])
+
     useEffect(() => {
         const searchSubscription = searchSubject.pipe(debounceTime(300)).subscribe((search) => {
             setSearchMvp(search)
@@ -389,7 +394,7 @@ const TrackingContainer = (): ReactElement => {
                             )}
 
                             {isShareable && firebaseRealTime.sessionState !== SessionState.idle && (
-                                <DropdownMenu.Item color="red" onClick={firebaseRealTime.leaveSession}>
+                                <DropdownMenu.Item color="red" onClick={onLeaveSession}>
                                     <Cross1Icon /> Leave session
                                 </DropdownMenu.Item>
                             )}

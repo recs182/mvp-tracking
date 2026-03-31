@@ -58,7 +58,6 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
         firebaseUnsubscribe.current = []
         setSessionState(SessionState.idle)
         setRoomCode(null)
-        localStorage.removeItem(localStorageRoomCodeKey)
     }, [])
 
     // ── Shared: subscribe to room timer changes ────────────────────────────────
