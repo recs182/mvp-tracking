@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getApps, initializeApp } from 'firebase/app'
-import { getDatabase, onValue, ref, remove, set, type Unsubscribe } from 'firebase/database'
+import { get, getDatabase, onValue, ref, remove, set, type Unsubscribe } from 'firebase/database'
 import { DateTime } from 'luxon'
 import { Subject } from 'rxjs'
 import { v4 } from 'uuid'
@@ -56,9 +56,17 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
     const cleanup = useCallback(() => {
         firebaseUnsubscribe.current.forEach((unsub) => unsub())
         firebaseUnsubscribe.current = []
+
+        // Remove host presence if we were the host
+        const code = roomCode
+        if (code) {
+            const database = getFirebaseDb()
+            remove(ref(database, `rooms/${code}/host`))
+        }
+
         setSessionState(SessionState.idle)
         setRoomCode(null)
-    }, [])
+    }, [roomCode])
 
     // ── Shared: subscribe to room timer changes ────────────────────────────────
     const subscribeToRoom = useCallback(
@@ -94,6 +102,13 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
         [onFullState$, onTimerUpdate$]
     )
 
+    // ── Host presence check ────────────────────────────────────────────────────
+    const checkForHost = useCallback(async (code: string): Promise<boolean> => {
+        const database = getFirebaseDb()
+        const snap = await get(ref(database, `rooms/${code}/host`))
+        return snap.exists() && snap.val() === true
+    }, [])
+
     // ── Host ───────────────────────────────────────────────────────────────────
     const hostSession = useCallback(
         async (mvps: RagnarokMvp[]): Promise<string> => {
@@ -106,9 +121,11 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
 
             const database = getFirebaseDb()
 
-            // Write the current local state to the room so guests see it immediately
-            const initialState = sanitizeState(mvps)
-            await set(ref(database, `rooms/${code}/timers`), initialState)
+            // Write host presence and initial timer state
+            await Promise.all([
+                set(ref(database, `rooms/${code}/host`), true),
+                set(ref(database, `rooms/${code}/timers`), sanitizeState(mvps)),
+            ])
 
             subscribeToRoom(code)
             setSessionState(SessionState.hosting)
@@ -165,6 +182,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
         joinSession,
         leaveSession: cleanup,
         resetRoomCode,
+        checkForHost,
         broadcastUpdate,
         onFullState$,
         onTimerUpdate$,

@@ -300,7 +300,13 @@ const TrackingContainer = (): ReactElement => {
     // AUTO JOINS LATEST ROOM
     useEffect(() => {
         if (isShareable && existingRoomCode) {
-            firebaseRealTime.hostSession(mvpsList)
+            firebaseRealTime.checkForHost(existingRoomCode).then((host) => {
+                if (host) {
+                    firebaseRealTime.joinSession(existingRoomCode, mvpsList).finally()
+                } else {
+                    firebaseRealTime.hostSession(mvpsList).finally()
+                }
+            })
         }
     }, [])
 
