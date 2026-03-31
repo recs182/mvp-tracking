@@ -53,20 +53,25 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
     // Keep a ref to the current mvps so the firebase listener always has fresh data
     const mvpsRef = useRef<RagnarokMvp[]>([])
 
-    const cleanup = useCallback(() => {
-        firebaseUnsubscribe.current.forEach((unsub) => unsub())
-        firebaseUnsubscribe.current = []
+    const cleanup = useCallback(
+        (removeHost = true) => {
+            firebaseUnsubscribe.current.forEach((unsub) => unsub())
+            firebaseUnsubscribe.current = []
 
-        // Remove host presence if we were the host
-        const code = roomCode
-        if (code) {
-            const database = getFirebaseDb()
-            remove(ref(database, `rooms/${code}/host`))
-        }
+            // Remove host presence if we were the host
+            if (removeHost) {
+                const code = roomCode
+                if (code) {
+                    const database = getFirebaseDb()
+                    remove(ref(database, `rooms/${code}/host`))
+                }
+            }
 
-        setSessionState(SessionState.idle)
-        setRoomCode(null)
-    }, [roomCode])
+            setSessionState(SessionState.idle)
+            setRoomCode(null)
+        },
+        [roomCode]
+    )
 
     const subscribeToRoom = useCallback(
         (code: string) => {
@@ -109,7 +114,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
 
     const hostSession = useCallback(
         async (mvps: RagnarokMvp[]): Promise<string> => {
-            cleanup()
+            cleanup(false) // don't remove host — we're about to become one
             mvpsRef.current = mvps
             setSessionState(SessionState.connecting)
 
