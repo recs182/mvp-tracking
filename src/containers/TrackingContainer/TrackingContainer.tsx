@@ -34,7 +34,7 @@ import {
     UpdateFromTombForm,
 } from '@/components'
 import { computeTimeZone, computeTrackingInitialState, sortTrackingMvpList } from '@/helpers'
-import { defaultDateTimeFormat, localStorageMvpsKey } from '@/constants'
+import { defaultDateTimeFormat, localStorageMvpsKey, localStorageRoomCodeKey } from '@/constants'
 import { getRoomCode, SessionState, useFirebaseRealTime } from '@/services/firebase'
 // self
 import {
@@ -283,8 +283,8 @@ const TrackingContainer = (): ReactElement => {
     )
 
     const onLeaveSession = useCallback(() => {
+        localStorage.removeItem(localStorageRoomCodeKey)
         firebaseRealTime.leaveSession()
-        firebaseRealTime.resetRoomCode()
     }, [firebaseRealTime])
 
     useEffect(() => {
