@@ -467,7 +467,8 @@ const TrackingContainer = (): ReactElement => {
                     <Tooltip content="This timers do not update. If they are completely off, just refresh the page">
                         <Text size="1">Server time: {serverTime.toFormat('HH:mm')}</Text>
                     </Tooltip>
-                    <Text size="1">Your time: {localTime.toFormat('HH:mm')}</Text>
+
+                    {!isShareable && <Text size="1">Your time: {localTime.toFormat('HH:mm')}</Text>}
 
                     {firebaseRealTime.sessionState === SessionState.connecting && (
                         <Text size="1" color="yellow">
