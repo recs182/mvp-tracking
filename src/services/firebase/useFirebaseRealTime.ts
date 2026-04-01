@@ -151,6 +151,9 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
             return
         }
 
+        // Keep mvpsRef in sync so the onValue listener uses fresh local state
+        mvpsRef.current = mvpsRef.current.map((mvp) => (mvp.id === id ? { ...mvp, timeOfDeath } : mvp))
+
         const database = getFirebaseDb()
         const path = ref(database, `rooms/${roomCode}/timers/${id}`)
 
