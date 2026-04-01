@@ -42,7 +42,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
 
     const roomCodeRef = useRef<string | null>(null)
     const onFullState$ = useRef(new Subject<TimerState>()).current
-    const onTimerUpdate$ = useRef(new Subject<{ id: number; timeOfDeath: string }>()).current
+    const onTimerUpdate$ = useRef(new Subject<{ id: number; timeOfDeath: null | string }>()).current
 
     const firebaseUnsubscribe = useRef<Unsubscribe[]>([])
     // Keep a ref to the current mvps so the firebase listener always has fresh data
@@ -86,9 +86,16 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
                 const merged = mergeTimers(sanitizeState(mvps), valid, mvps)
                 onFullState$.next(merged)
 
-                // also emit individual updates so TrackingContainer dispatcher works
+                // emit updates for present timers
                 Object.entries(merged).forEach(([idStr, timeOfDeath]) => {
                     onTimerUpdate$.next({ id: Number(idStr), timeOfDeath })
+                })
+
+                // emit removals for timers that are no longer in Firebase
+                mvps.forEach((mvp) => {
+                    if (mvp.timeOfDeath && !merged[mvp.id]) {
+                        onTimerUpdate$.next({ id: mvp.id, timeOfDeath: null })
+                    }
                 })
             })
 

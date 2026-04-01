@@ -309,9 +309,9 @@ const TrackingContainer = (): ReactElement => {
         if (isShareable && existingRoomCode) {
             firebaseRealTime.checkRoomExists(existingRoomCode).then((exists) => {
                 if (exists) {
-                    firebaseRealTime.joinSession(existingRoomCode, mvpsList).finally()
+                    firebaseRealTime.joinSession(existingRoomCode, mvpsList)
                 } else {
-                    firebaseRealTime.hostSession(mvpsList).finally()
+                    firebaseRealTime.hostSession(mvpsList)
                 }
             })
         }
@@ -320,10 +320,12 @@ const TrackingContainer = (): ReactElement => {
     useEffect(() => {
         const fullStateSub = firebaseRealTime.onFullState$.subscribe((timers) => {
             const entries = Object.entries(timers).reduce<{ mvp: RagnarokMvp; timeOfDeath: DateTime }[]>(
-                (acc, [idStr, timeOfDeath]) => {
+                (merge, [idStr, timeOfDeath]) => {
                     const mvp = mvpsList.find((mvp) => mvp.id === Number(idStr))
-                    if (!mvp) return acc
-                    return [...acc, { mvp, timeOfDeath: DateTime.fromISO(timeOfDeath).setZone(computeTimeZone()) }]
+
+                    return !mvp
+                        ? merge
+                        : [...merge, { mvp, timeOfDeath: DateTime.fromISO(timeOfDeath).setZone(computeTimeZone()) }]
                 },
                 []
             )
@@ -335,7 +337,11 @@ const TrackingContainer = (): ReactElement => {
             if (!mvp) {
                 return
             }
-            dispatcher({ mvp, timeOfDeathToUpdate: DateTime.fromISO(timeOfDeath).setZone(computeTimeZone()) })
+
+            dispatcher({
+                mvp,
+                timeOfDeathToUpdate: timeOfDeath ? DateTime.fromISO(timeOfDeath).setZone(computeTimeZone()) : null,
+            })
         })
 
         return () => {

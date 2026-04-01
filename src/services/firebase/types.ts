@@ -23,5 +23,5 @@ export interface UseFirebaseRealTimeReturn {
     broadcastUpdate: (id: number, timeOfDeath: DateTime | null) => void
     // inbound — subscribe to these in TrackingContainer
     onFullState$: Subject<TimerState>
-    onTimerUpdate$: Subject<{ id: number; timeOfDeath: string }>
+    onTimerUpdate$: Subject<{ id: number; timeOfDeath: null | string }>
 }
