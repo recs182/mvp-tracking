@@ -70,8 +70,9 @@ const reducer = (currentState: RagnarokMvp[], beingModified: DispatcherStateModi
 
     // persist the times of death in localStorage in case of refresh
     const toPersistInLocalStorage = modifiedMvps.reduce((merge, mvp) => {
-        return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath } : merge
+        return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath.toUTC().toISO() } : merge
     }, {})
+
     localStorage.setItem(localStorageMvpsKey, JSON.stringify(toPersistInLocalStorage))
 
     return modifiedMvps
@@ -244,6 +245,7 @@ const TrackingContainer = (): ReactElement => {
                     timeOfDeathTo: timeOfDeath,
                 })
                 dispatcher({ mvp, timeOfDeathToUpdate: timeOfDeath })
+                firebaseRealTime.broadcastUpdate(mvp.id, timeOfDeath)
             }
         },
         [addChangeToHistory]

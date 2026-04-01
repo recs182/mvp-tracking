@@ -146,7 +146,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
             const path = ref(database, `rooms/${code}/timers/${id}`)
 
             if (timeOfDeath) {
-                set(path, timeOfDeath.toISO())
+                set(path, timeOfDeath.toUTC().toISO())
             } else {
                 remove(path)
             }
