@@ -1,27 +1,22 @@
 import type { DateTime } from 'luxon'
 import { Subject } from 'rxjs'
-// app
-import type { TimerState } from './validation'
 import type { RagnarokMvp } from '@/containers/TrackingContainer/types'
 
 export enum SessionState {
     idle = 'idle',
     connecting = 'connecting',
-    hosting = 'hosting',
-    joined = 'joined',
+    active = 'active',
 }
+
+export type TimerUpdate = { id: number; timeOfDeath: string | null }
 
 export interface UseFirebaseRealTimeReturn {
     sessionState: SessionState
     roomCode: string | null
-    // actions
-    hostSession: (mvps: RagnarokMvp[]) => Promise<string> // returns room code
-    joinSession: (code: string, mvps: RagnarokMvp[]) => Promise<void>
+    // join or create a room; pass current local mvps so they are pushed when creating
+    connect: (roomCode: string, localMvps: RagnarokMvp[]) => Promise<void>
     leaveSession: () => void
-    checkRoomExists: (code: string) => Promise<boolean>
-    // outbound — call these when the timer state changes
     broadcastUpdate: (id: number, timeOfDeath: DateTime | null) => void
-    // inbound — subscribe to these in TrackingContainer
-    onFullState$: Subject<TimerState>
-    onTimerUpdate$: Subject<{ id: number; timeOfDeath: null | string }>
+    // emits every time a single timer changes in Firebase (including removals → null)
+    onTimerUpdate$: Subject<TimerUpdate>
 }

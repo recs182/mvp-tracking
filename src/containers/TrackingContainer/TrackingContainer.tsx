@@ -22,6 +22,7 @@ import {
     UploadIcon,
 } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
+import { v4 } from 'uuid'
 // app
 import {
     HistoryDialog,
@@ -34,7 +35,7 @@ import {
     UpdateFromTombForm,
 } from '@/components'
 import { computeTimeZone, computeTrackingInitialState, sortTrackingMvpList } from '@/helpers'
-import { defaultDateTimeFormat, localStorageMvpsKey, localStorageRoomCodeKey } from '@/constants'
+import { defaultDateTimeFormat, localStorageMvpsKey } from '@/constants'
 import { getRoomCode, SessionState, useFirebaseRealTime } from '@/services/firebase'
 // self
 import {
@@ -68,7 +69,6 @@ const reducer = (currentState: RagnarokMvp[], beingModified: DispatcherStateModi
         ...currentState.filter((mvp) => mvp.id !== beingModified.mvp.id),
     ]
 
-    // persist the times of death in localStorage in case of refresh
     const toPersistInLocalStorage = modifiedMvps.reduce((merge, mvp) => {
         return mvp.timeOfDeath ? { ...merge, [mvp.id]: mvp.timeOfDeath.toUTC().toISO() } : merge
     }, {})
@@ -86,7 +86,6 @@ const computeUndoAction = (action: TrackingChangeAction): TrackingChangeAction =
 }
 
 const TrackingContainer = (): ReactElement => {
-    const existingRoomCode = getRoomCode()
     const firebaseRealTime = useFirebaseRealTime()
 
     const searchSubject = useRef(new Subject<string>()).current
@@ -101,6 +100,12 @@ const TrackingContainer = (): ReactElement => {
     const [serverTimeDialog, setServerTimeDialog] = useState(false)
     const [importDialog, setImportDialog] = useState(false)
     const [joinSessionDialog, setJoinSessionDialog] = useState(false)
+
+    // Keep a stable ref to mvpsList for use inside callbacks and effects
+    const mvpsListRef = useRef(mvpsList)
+    useEffect(() => {
+        mvpsListRef.current = mvpsList
+    }, [mvpsList])
 
     const isShareable = useMemo(
         () => ['.rot.splitledger.pro', 'localhost'].some((hostname) => location.hostname.includes(hostname)),
@@ -159,7 +164,7 @@ const TrackingContainer = (): ReactElement => {
             firebaseRealTime.broadcastUpdate(mvp.id, tombTime)
             cleanSearchInput()
         },
-        []
+        [addChangeToHistory, firebaseRealTime, cleanSearchInput]
     )
 
     const resetTimeFromMvpFactory = useCallback(
@@ -173,13 +178,12 @@ const TrackingContainer = (): ReactElement => {
             dispatcher({ mvp, timeOfDeathToUpdate: null })
             firebaseRealTime.broadcastUpdate(mvp.id, null)
         },
-        []
+        [addChangeToHistory, firebaseRealTime]
     )
 
     const undoChangeAndAddToHistory = useCallback(
         (undo: TrackingChange) => () => {
             const actionToUse = computeUndoAction(undo.action)
-
             addChangeToHistory({
                 action: actionToUse,
                 mvp: undo.mvp,
@@ -189,10 +193,9 @@ const TrackingContainer = (): ReactElement => {
             dispatcher({ mvp: undo.mvp, timeOfDeathToUpdate: undo.timeOfDeathFrom })
             firebaseRealTime.broadcastUpdate(undo.mvp.id, undo.timeOfDeathFrom)
         },
-        []
+        [addChangeToHistory, firebaseRealTime]
     )
 
-    // full reset
     const resetChangesState = useCallback(() => {
         setChangesState([])
         dispatcher({
@@ -203,15 +206,11 @@ const TrackingContainer = (): ReactElement => {
                 mobId: '',
                 name: '',
                 protocol: RagnarokMvpProtocol.normal,
-                spawnTime: {
-                    minMinutes: 0,
-                    maxMinutes: 0,
-                },
+                spawnTime: { minMinutes: 0, maxMinutes: 0 },
                 timeOfDeath: null,
             },
             timeOfDeathToUpdate: null,
         })
-
         toast.success('Tracker has been reset', {
             description: 'All tracked MVPs have been removed',
         })
@@ -220,24 +219,16 @@ const TrackingContainer = (): ReactElement => {
     const trackedMvps = mvpsList.filter((mvp) => mvp.timeOfDeath)
 
     const shareTimers = useCallback(() => {
-        if (trackedMvps) {
-            const toShare = trackedMvps
-                .filter((mvp) => mvp.timeOfDeath)
-                .map((mvp) => {
-                    return `${mvp.id}|${(mvp.timeOfDeath as DateTime).toUTC().toISO()}`
+        if (!trackedMvps.length) return
+        const toShare = trackedMvps.map((mvp) => `${mvp.id}|${(mvp.timeOfDeath as DateTime).toUTC().toISO()}`)
+        navigator.clipboard
+            .writeText(toShare.join(';'))
+            .then(() => {
+                toast.success('Tracked MVPs copied to clipboard', {
+                    description: 'You can now share it with your friends',
                 })
-
-            navigator.clipboard
-                .writeText(toShare.join(';'))
-                .then(() => {
-                    toast.success('Tracked MVPs copied to clipboard', {
-                        description: 'You can now share it with your friends',
-                    })
-                })
-                .catch(() => {
-                    toast.error('Failed to copy to clipboard')
-                })
-        }
+            })
+            .catch(() => toast.error('Failed to copy to clipboard'))
     }, [trackedMvps])
 
     const importTimers = useCallback(
@@ -250,90 +241,63 @@ const TrackingContainer = (): ReactElement => {
                     timeOfDeathTo: timeOfDeath,
                 })
                 dispatcher({ mvp, timeOfDeathToUpdate: timeOfDeath })
-                firebaseRealTime.broadcastUpdate(mvp.id, timeOfDeath)
             }
         },
         [addChangeToHistory]
     )
 
-    const hostSession = useCallback(() => {
-        firebaseRealTime.hostSession(mvpsList).then((code) => {
+    const createSession = useCallback(() => {
+        const roomCode = v4()
+        firebaseRealTime.connect(roomCode, mvpsListRef.current).then(() => {
             navigator.clipboard
-                .writeText(code)
+                .writeText(roomCode)
                 .then(() => {
                     toast.success('Session started', {
                         description: 'Live session code copied to clipboard',
                     })
                 })
-                .catch(() => {
-                    toast.success('Session started')
-                })
+                .catch(() => toast.success('Session started'))
         })
-    }, [mvpsList, firebaseRealTime])
-
-    const copyRoomCode = useCallback(() => {
-        if (firebaseRealTime.roomCode) {
-            navigator.clipboard
-                .writeText(firebaseRealTime.roomCode)
-                .then(() => {
-                    toast.success('Live session code copied to clipboard')
-                })
-                .catch(() => {
-                    toast.error('Failed to copy live session code')
-                })
-        }
-    }, [firebaseRealTime.roomCode])
-
-    const onJoinSession = useCallback(
-        (code: string) => firebaseRealTime.joinSession(code, mvpsList),
-        [firebaseRealTime, mvpsList]
-    )
-
-    const onLeaveSession = useCallback(() => {
-        localStorage.removeItem(localStorageRoomCodeKey)
-        firebaseRealTime.leaveSession()
     }, [firebaseRealTime])
 
-    useEffect(() => {
-        const searchSubscription = searchSubject.pipe(debounceTime(300)).subscribe((search) => {
-            setSearchMvp(search)
-        })
+    const onJoinSession = useCallback(
+        (code: string) => firebaseRealTime.connect(code, mvpsListRef.current),
+        [firebaseRealTime]
+    )
 
-        return () => {
-            searchSubscription.unsubscribe()
+    const copyRoomCode = useCallback(() => {
+        if (!firebaseRealTime.roomCode) {
+            return
+        }
+
+        navigator.clipboard
+            .writeText(firebaseRealTime.roomCode)
+            .then(() => toast.success('Live session code copied to clipboard'))
+            .catch(() => toast.error('Failed to copy live session code'))
+    }, [firebaseRealTime.roomCode])
+
+    // Search debounce
+    useEffect(() => {
+        const subscription = searchSubject.pipe(debounceTime(300)).subscribe(setSearchMvp)
+        return () => subscription.unsubscribe()
+    }, [])
+
+    // Auto-connect if a roomCode was persisted from a previous session
+    useEffect(() => {
+        if (!isShareable) {
+            return
+        }
+
+        const savedCode = getRoomCode()
+        if (savedCode) {
+            firebaseRealTime.connect(savedCode, mvpsListRef.current)
         }
     }, [])
 
-    // AUTO JOINS LATEST ROOM
+    // Subscribe to Firebase timer updates — Firebase is the source of truth
     useEffect(() => {
-        if (isShareable && existingRoomCode) {
-            firebaseRealTime.checkRoomExists(existingRoomCode).then((exists) => {
-                if (exists) {
-                    firebaseRealTime.joinSession(existingRoomCode, mvpsList)
-                } else {
-                    firebaseRealTime.hostSession(mvpsList)
-                }
-            })
-        }
-    }, [])
-
-    useEffect(() => {
-        const fullStateSub = firebaseRealTime.onFullState$.subscribe((timers) => {
-            const entries = Object.entries(timers).reduce<{ mvp: RagnarokMvp; timeOfDeath: DateTime }[]>(
-                (merge, [idStr, timeOfDeath]) => {
-                    const mvp = mvpsList.find((mvp) => mvp.id === Number(idStr))
-
-                    return !mvp
-                        ? merge
-                        : [...merge, { mvp, timeOfDeath: DateTime.fromISO(timeOfDeath).setZone(computeTimeZone()) }]
-                },
-                []
-            )
-            importTimers(entries)
-        })
-
-        const timerUpdateSub = firebaseRealTime.onTimerUpdate$.subscribe(({ id, timeOfDeath }) => {
-            const mvp = mvpsList.find((mvp) => mvp.id === id)
+        const sub = firebaseRealTime.onTimerUpdate$.subscribe(({ id, timeOfDeath }) => {
+            const mvp = mvpsListRef.current.find((m) => m.id === id)
             if (!mvp) {
                 return
             }
@@ -343,12 +307,8 @@ const TrackingContainer = (): ReactElement => {
                 timeOfDeathToUpdate: timeOfDeath ? DateTime.fromISO(timeOfDeath).setZone(computeTimeZone()) : null,
             })
         })
-
-        return () => {
-            fullStateSub.unsubscribe()
-            timerUpdateSub.unsubscribe()
-        }
-    }, [firebaseRealTime.onFullState$, firebaseRealTime.onTimerUpdate$, mvpsList])
+        return () => sub.unsubscribe()
+    }, [firebaseRealTime.onTimerUpdate$])
 
     const searchFilteredMvps = mvpsList.filter(
         (mvp) =>
@@ -391,17 +351,13 @@ const TrackingContainer = (): ReactElement => {
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Content>
                             {isShareable && firebaseRealTime.sessionState === SessionState.idle && (
-                                <DropdownMenu.Item onClick={hostSession}>
+                                <DropdownMenu.Item onClick={createSession}>
                                     <PlusIcon /> Create live session
                                 </DropdownMenu.Item>
                             )}
 
                             {isShareable && firebaseRealTime.sessionState === SessionState.idle && (
-                                <DropdownMenu.Item
-                                    onClick={() => {
-                                        setJoinSessionDialog(true)
-                                    }}
-                                >
+                                <DropdownMenu.Item onClick={() => setJoinSessionDialog(true)}>
                                     <EnterIcon /> Join live session
                                 </DropdownMenu.Item>
                             )}
@@ -413,7 +369,7 @@ const TrackingContainer = (): ReactElement => {
                             )}
 
                             {isShareable && firebaseRealTime.sessionState !== SessionState.idle && (
-                                <DropdownMenu.Item color="red" onClick={onLeaveSession}>
+                                <DropdownMenu.Item color="red" onClick={firebaseRealTime.leaveSession}>
                                     <Cross1Icon /> Leave session
                                 </DropdownMenu.Item>
                             )}
@@ -501,15 +457,9 @@ const TrackingContainer = (): ReactElement => {
                             </Text>
                         )}
 
-                        {firebaseRealTime.sessionState === SessionState.joined && (
+                        {firebaseRealTime.sessionState === SessionState.active && (
                             <Text size="1" color="green">
                                 Live updating
-                            </Text>
-                        )}
-
-                        {firebaseRealTime.sessionState === SessionState.hosting && (
-                            <Text size="1" color="green">
-                                Live update created
                             </Text>
                         )}
                     </Flex>
