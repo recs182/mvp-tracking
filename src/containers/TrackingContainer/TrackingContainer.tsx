@@ -260,6 +260,7 @@ const TrackingContainer = (): ReactElement => {
 
     const createSession = useCallback(() => {
         const roomCode = v4()
+
         firebaseRealTime.connect(roomCode, mvpsListRef.current).then(() => {
             navigator.clipboard
                 .writeText(roomCode)
@@ -273,7 +274,7 @@ const TrackingContainer = (): ReactElement => {
     }, [firebaseRealTime])
 
     const onJoinSession = useCallback(
-        (code: string) => firebaseRealTime.connect(code, mvpsListRef.current),
+        (code: string) => firebaseRealTime.connect(code, mvpsListRef.current, resetChangesState),
         [firebaseRealTime]
     )
 
@@ -314,7 +315,7 @@ const TrackingContainer = (): ReactElement => {
 
         const savedCode = getRoomCode()
         if (savedCode) {
-            firebaseRealTime.connect(savedCode, mvpsListRef.current)
+            firebaseRealTime.connect(savedCode, mvpsListRef.current, resetChangesState)
         }
     }, [])
 

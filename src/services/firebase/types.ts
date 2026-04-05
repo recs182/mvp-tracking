@@ -14,7 +14,7 @@ export interface UseFirebaseRealTimeReturn {
     sessionState: SessionState
     roomCode: string | null
     // join or create a room; pass current local mvps so they are pushed when creating
-    connect: (roomCode: string, localMvps: RagnarokMvp[]) => Promise<void>
+    connect: (roomCode: string, localMvps: RagnarokMvp[], onRoomExists?: () => void) => Promise<void>
     leaveSession: () => void
     broadcastUpdate: (id: number, timeOfDeath: DateTime | null) => void
     // emits every time a single timer changes in Firebase (including removals → null)

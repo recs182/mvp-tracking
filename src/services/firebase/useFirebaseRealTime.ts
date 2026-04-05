@@ -73,7 +73,7 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
     )
 
     const connect = useCallback(
-        async (roomCode: string, localMvps: RagnarokMvp[]): Promise<void> => {
+        async (roomCode: string, localMvps: RagnarokMvp[], onRoomExists?: () => void): Promise<void> => {
             // Avoid double-connecting
             if (roomCodeRef.current === roomCode) {
                 return
@@ -96,6 +96,9 @@ export const useFirebaseRealTime = (): UseFirebaseRealTimeReturn => {
                 if (Object.keys(payload).length > 0) {
                     await set(ref(db, `rooms/${roomCode}/timers`), payload)
                 }
+            } else {
+                // Room exists — DB is the source of truth, wipe local state first
+                onRoomExists?.()
             }
 
             // Room exists — Firebase is the source of truth, subscribe and receive

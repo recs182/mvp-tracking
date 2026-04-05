@@ -187,7 +187,7 @@ export default [
         id: 101,
         name: 'Corrupted Soul',
         map: 'OGH 1',
-        spawnTime: { minMinutes: 960, maxMinutes: 961 },
+        spawnTime: { minMinutes: 960, maxMinutes: 960 },
         sprite: '2475.png',
         timeOfDeath: null,
         mobId: '2475',
@@ -1109,5 +1109,14 @@ export default [
         sprite: '1200.png',
         mobId: '1200',
         protocol: RagnarokMvpProtocol.miniBoss,
+    },
+    {
+        id: 2476,
+        name: 'Amdarais',
+        map: 'OGH 2',
+        spawnTime: { minMinutes: 960, maxMinutes: 960 },
+        sprite: '2476.png',
+        mobId: '2476',
+        protocol: RagnarokMvpProtocol.boss,
     },
 ] as RagnarokMvp[]
